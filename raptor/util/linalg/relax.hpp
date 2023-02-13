@@ -2,18 +2,18 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
-#include <float.h>
+namespace raptor {
 
-#include "core/vector.hpp"
-#include "core/matrix.hpp"
-#include "multilevel/level.hpp"
+    class CSRMatrix;
+    class Vector;
 
-using namespace raptor;
+    void jacobi(CSRMatrix *A, Vector &b, Vector &x, Vector &tmp,
+                int num_sweeps = 1, double omega = 1.0);
 
-void jacobi(CSRMatrix* A, Vector& b, Vector& x, Vector& tmp, 
-        int num_sweeps = 1, double omega = 1.0);
-void sor(CSRMatrix* A, Vector& b, Vector& x, Vector& tmp, 
-        int num_sweeps = 1, double omega = 1.0);
-void ssor(CSRMatrix* A, Vector& b, Vector& x, Vector& tmp, 
-        int num_sweeps = 1, double omega = 1.0);
+    void sor(CSRMatrix *A, Vector &b, Vector &x, Vector &tmp,
+             int num_sweeps = 1, double omega = 1.0);
 
+    void ssor(CSRMatrix *A, Vector &b, Vector &x, Vector &tmp,
+              int num_sweeps = 1, double omega = 1.0);
+
+}

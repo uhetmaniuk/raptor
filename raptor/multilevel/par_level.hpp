@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_ML_PARLEVEL_H
-#define RAPTOR_ML_PARLEVEL_H
+#pragma once
 
 #include "core/types.hpp"
 #include "core/par_matrix.hpp"
@@ -17,10 +16,10 @@ namespace raptor
         public:
             ParLevel()
             {
-                A = NULL;
-                P = NULL;
-                AP = NULL;
-                I = NULL;
+                A = nullptr;
+                P = nullptr;
+                AP = nullptr;
+                I = nullptr;
             }
 
             ~ParLevel()
@@ -42,4 +41,3 @@ namespace raptor
             ParCSRMatrix* I;
     };
 }
-#endif
