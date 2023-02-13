@@ -2,29 +2,14 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
-#include <float.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <iterator>
-#include <numeric>
-#include <functional>
-#include <set>
-
-#include <cstdint>
-#include <vector>
-#include <stdexcept>
-
 using namespace std;
 
 #define zero_tol 1.0e-16
+
+#ifndef NO_MPI
 #define RAPtor_MPI_INDEX_T MPI_INT
 #define RAPtor_MPI_DATA_T MPI_DOUBLE
+#endif
 
 // Defines for CF splitting and aggregation
 #define TmpSelection 4

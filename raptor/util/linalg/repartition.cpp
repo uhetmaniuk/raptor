@@ -1,6 +1,9 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "repartition.hpp"
+#include "core/par_matrix.hpp"
+
+namespace raptor {
 
 void make_contiguous(ParCSRMatrix* A, std::vector<int>& off_proc_part_map)
 {
@@ -67,7 +70,7 @@ ParCSRMatrix* repartition_matrix(ParCSRMatrix* A, int* partition, std::vector<in
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
 
-    ParCSRMatrix* A_part = NULL;
+    ParCSRMatrix* A_part = nullptr;
 
     int proc, start, end;
     int row_start, row_end, row_size;
@@ -388,4 +391,4 @@ ParCSRMatrix* repartition_matrix(ParCSRMatrix* A, int* partition, std::vector<in
     return A_part;
 }
 
-
+}

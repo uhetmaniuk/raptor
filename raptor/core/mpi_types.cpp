@@ -1,3 +1,10 @@
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <mpi.h>
+
+#include "mpi_types.hpp"
+
 bool profile = false;
 double collective_t = 0.0;
 double p2p_t = 0.0;
@@ -6,9 +13,6 @@ double mat_t = 0.0;
 double vec_t = 0.0;
 double total_t = 0.0;
 double new_comm_t = 0.0;
-
-#include <mpi.h>
-#include "mpi_types.hpp"
 
 void init_profile()
 {

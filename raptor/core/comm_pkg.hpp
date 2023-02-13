@@ -1,9 +1,10 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_PARCOMM_HPP
-#define RAPTOR_CORE_PARCOMM_HPP
+#pragma once
 
+#include <map>
 #include <mpi.h>
+
 #include "comm_data.hpp"
 #include "matrix.hpp"
 #include "partition.hpp"
@@ -315,7 +316,7 @@ namespace raptor
         **************************************************************/
         ParComm(Partition* partition, int _key = 0, 
                 RAPtor_MPI_Comm _comm = RAPtor_MPI_COMM_WORLD,
-                CommData* r_data = NULL) : CommPkg(partition)
+                CommData* r_data = nullptr) : CommPkg(partition)
         {
             mpi_comm = _comm;
             key = _key;
@@ -328,7 +329,7 @@ namespace raptor
 
         ParComm(Topology* topo, int _key = 0, 
                 RAPtor_MPI_Comm _comm = RAPtor_MPI_COMM_WORLD,
-                CommData* r_data = NULL) : CommPkg(topo)
+                CommData* r_data = nullptr) : CommPkg(topo)
         {
             mpi_comm = _comm;
             key = _key;
@@ -355,7 +356,7 @@ namespace raptor
                 const std::vector<int>& off_proc_column_map,
                 int _key = 9999,
                 RAPtor_MPI_Comm comm = RAPtor_MPI_COMM_WORLD,
-                CommData* r_data = NULL) : CommPkg(partition)
+                CommData* r_data = nullptr) : CommPkg(partition)
         {
             mpi_comm = comm;
             std::vector<int> off_proc_col_to_proc(off_proc_column_map.size());
@@ -372,7 +373,7 @@ namespace raptor
                 const std::vector<int>& on_proc_column_map,
                 int _key = 9999, 
                 RAPtor_MPI_Comm comm = RAPtor_MPI_COMM_WORLD,
-                CommData* r_data = NULL) : CommPkg(partition)
+                CommData* r_data = nullptr) : CommPkg(partition)
         {
             mpi_comm = comm;
             int idx;
@@ -412,7 +413,7 @@ namespace raptor
                 const std::vector<int>& local_row_map,
                 int _key = 9999,
                 RAPtor_MPI_Comm comm = RAPtor_MPI_COMM_WORLD,
-                CommData* r_data = NULL) : CommPkg(_topology)
+                CommData* r_data = nullptr) : CommPkg(_topology)
         {
             mpi_comm = comm;
             init_par_comm(off_proc_column_map, off_proc_col_to_proc,
@@ -432,7 +433,7 @@ namespace raptor
         void init_par_comm(const std::vector<int>& off_proc_column_map,
                 const std::vector<int>& off_proc_col_to_proc,
                 int _key, RAPtor_MPI_Comm comm,
-                CommData* r_data = NULL)
+                CommData* r_data = nullptr)
         {
             // Get RAPtor_MPI Information
             int rank, num_procs;
@@ -507,7 +508,7 @@ namespace raptor
         {
             mpi_comm = comm->mpi_comm;
 
-            if (comm == NULL)
+            if (comm == nullptr)
             {
                 key = 0;
                 return;
@@ -524,7 +525,7 @@ namespace raptor
             mpi_comm = comm->mpi_comm;
             int idx, new_idx;
 
-            if (comm == NULL)
+            if (comm == nullptr)
             {
                 key = 0;
                 return;
@@ -1021,14 +1022,14 @@ namespace raptor
     {
         public:
 
-        TAPComm(Partition* partition, bool form_S = true, ParComm* L_comm = NULL) : CommPkg(partition)
+        TAPComm(Partition* partition, bool form_S = true, ParComm* L_comm = nullptr) : CommPkg(partition)
         {
             if (form_S)
             {
                 local_S_par_comm = new ParComm(partition, 2345, partition->topology->local_comm,
                         new DuplicateData());
             }
-            else local_S_par_comm = NULL;
+            else local_S_par_comm = nullptr;
 
             local_R_par_comm = new ParComm(partition, 3456, partition->topology->local_comm,
                     new NonContigData());
@@ -1146,7 +1147,7 @@ namespace raptor
             {
                 local_S_par_comm = new ParComm(tap_comm->local_S_par_comm);
             }
-            else local_S_par_comm = NULL;
+            else local_S_par_comm = nullptr;
 
             global_par_comm = new ParComm(tap_comm->global_par_comm);
             local_R_par_comm = new ParComm(tap_comm->local_R_par_comm);
@@ -1161,14 +1162,14 @@ namespace raptor
         }
 
         TAPComm(TAPComm* tap_comm, const std::vector<int>& off_proc_col_to_new, 
-                ParComm* local_L = NULL) : CommPkg(tap_comm->topology)
+                ParComm* local_L = nullptr) : CommPkg(tap_comm->topology)
         {
             init_off_proc_new(tap_comm, off_proc_col_to_new, local_L);
         }
 
         TAPComm(TAPComm* tap_comm, const std::vector<int>& on_proc_col_to_new,
                 const std::vector<int>& off_proc_col_to_new, 
-                ParComm* local_L = NULL) : CommPkg(tap_comm->topology)
+                ParComm* local_L = nullptr) : CommPkg(tap_comm->topology)
         {
             int idx;
 
@@ -1203,7 +1204,7 @@ namespace raptor
 
 
         void init_off_proc_new(TAPComm* tap_comm, const std::vector<int>& off_proc_col_to_new,
-                ParComm* local_L = NULL)
+                ParComm* local_L = nullptr)
         {
             int idx, ctr;
             int start, end;
@@ -1294,7 +1295,7 @@ namespace raptor
                 local_S_par_comm = new ParComm(tap_comm->local_S_par_comm,
                         global_int_buffer);
             }
-            else local_S_par_comm = NULL;
+            else local_S_par_comm = nullptr;
 
             // Determine size of final recvs (should be equal to 
             // number of off_proc cols)
@@ -1399,7 +1400,7 @@ namespace raptor
             RAPtor_MPI_Comm_size(comm, &num_procs);
 
             // Initialize class variables
-            local_S_par_comm = NULL;
+            local_S_par_comm = nullptr;
             local_R_par_comm = new ParComm(partition, 3456, partition->topology->local_comm, 
                     new NonContigData());
             local_L_par_comm = new ParComm(partition, 4567, partition->topology->local_comm,
@@ -1838,4 +1839,3 @@ namespace raptor
         ParComm* global_par_comm;
     };
 }
-#endif

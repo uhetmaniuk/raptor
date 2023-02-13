@@ -1,40 +1,42 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_PAR_SPLITTING_HPP
-#define RAPTOR_PAR_SPLITTING_HPP
+#pragma once
 
-#include "core/types.hpp"
-#include "core/par_matrix.hpp"
-#include "cf_splitting.hpp"
+#include <vector>
 
-using namespace raptor;
+namespace raptor {
 
-void set_initial_states(ParCSRMatrix* S, std::vector<int>& states);
-void reset_boundaries(ParCSRMatrix* S, std::vector<int>& states);
+    class ParCSRMatrix;
 
-void cljp_main_loop(ParCSRMatrix* S, std::vector<int>& states,
-        std::vector<int>& off_proc_states, bool tap_comm = false,
-        double* rand_vals = NULL);
-void pmis_main_loop(ParCSRMatrix* S, std::vector<int>& states,
-        std::vector<int>& off_proc_states, bool tap_comm = false,
-        double* rand_vals = NULL);
+    void set_initial_states(ParCSRMatrix *S, std::vector<int> &states);
 
-void split_rs(ParCSRMatrix* S, std::vector<int>& states, 
-        std::vector<int>& off_proc_states, bool tap_cf = false);
+    void reset_boundaries(ParCSRMatrix *S, std::vector<int> &states);
 
-void split_cljp(ParCSRMatrix* S, std::vector<int>& states, 
-        std::vector<int>& off_proc_states, bool tap_cf = false, 
-        double* rand_vals = NULL);
+    void cljp_main_loop(ParCSRMatrix *S, std::vector<int> &states,
+                        std::vector<int> &off_proc_states, bool tap_comm = false,
+                        const double *rand_vals = nullptr);
 
-void split_falgout(ParCSRMatrix* S, std::vector<int>& states, 
-        std::vector<int>& off_proc_states, bool tap_cf = false, 
-        double* rand_vals = NULL);
+    void pmis_main_loop(ParCSRMatrix *S, std::vector<int> &states,
+                        std::vector<int> &off_proc_states, bool tap_comm = false,
+                        const double *rand_vals = nullptr);
 
-void split_pmis(ParCSRMatrix* S, std::vector<int>& states,
-        std::vector<int>& off_proc_states, bool tap_cf = false, 
-        double* rand_vals = NULL);
+    void split_rs(ParCSRMatrix *S, std::vector<int> &states,
+                  std::vector<int> &off_proc_states, bool tap_cf = false);
 
-void split_hmis(ParCSRMatrix* S, std::vector<int>& states,
-        std::vector<int>& off_proc_states, bool tap_cf = false, 
-        double* rand_vals = NULL);
-#endif
+    void split_cljp(ParCSRMatrix *S, std::vector<int> &states,
+                    std::vector<int> &off_proc_states, bool tap_cf = false,
+                    const double *rand_vals = nullptr);
+
+    void split_falgout(ParCSRMatrix *S, std::vector<int> &states,
+                       std::vector<int> &off_proc_states, bool tap_cf = false,
+                       const double *rand_vals = nullptr);
+
+    void split_pmis(ParCSRMatrix *S, std::vector<int> &states,
+                    std::vector<int> &off_proc_states, bool tap_cf = false,
+                    const double *rand_vals = nullptr);
+
+    void split_hmis(ParCSRMatrix *S, std::vector<int> &states,
+                    std::vector<int> &off_proc_states, bool tap_cf = false,
+                    const double *rand_vals = nullptr);
+
+}

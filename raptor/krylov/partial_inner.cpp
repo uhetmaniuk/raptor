@@ -2,6 +2,8 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "krylov/partial_inner.hpp"
 
+#include <cmath>
+
 namespace raptor {
 
 /********************************************************************** 

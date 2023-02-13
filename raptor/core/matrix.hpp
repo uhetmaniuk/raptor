@@ -2,6 +2,10 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
+#include <cmath>
+#include <cstdlib>
+#include <vector>
+
 #include "types.hpp"
 #include "vector.hpp"
 
@@ -149,22 +153,26 @@ namespace raptor
     virtual CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) = 0;
     virtual Matrix* transpose() = 0;
 
-    double* get_values(Vector& x) const
+    static double* get_values(Vector& x)
     {
         return x.values.data();
     }
-    template<typename T> T* get_values(std::vector<T>& x) const
+
+    template<typename T>
+    static T* get_values(std::vector<T>& x)
     {
         return x.data();
     }
-    template<typename T> T* get_values(T* x) const
+
+    template<typename T>
+    static T* get_values(T* x)
     {
         return x;
     }
     
     // Method for printing the value at one position
     // (either single or block value)
-    void val_print(int row, int col, double val) const
+    static void val_print(int row, int col, double val)
     {
         printf("A[%d][%d] = %e\n", row, col, val);
     }
@@ -179,11 +187,12 @@ namespace raptor
         }
     }
 
-    double copy_val(double val) const
+    static double copy_val(double val)
     {
         return val;
     }
-    double* copy_val(double* val) const
+
+    double* copy_val(const double* val) const
     {
         double* new_val = new double[b_size];
         for (int i = 0; i < b_size; i++)
@@ -195,11 +204,11 @@ namespace raptor
 
     // Method for finding the absolute value of 
     // either a single or block value
-    double abs_val(double val) const
+    static double abs_val(double val)
     {
         return fabs(val);
     }
-    double abs_val(double* val) const
+    double abs_val(const double* val) const
     {
         double sum = 0;
         for (int i = 0; i < b_size; i++)
@@ -211,7 +220,7 @@ namespace raptor
 
     // Methods for appending two values
     // (either single or block values)
-    void append_vals(double* val, double* addl_val) const
+    void append_vals(double* val, const double* addl_val) const
     {
         *val += *addl_val;
     }
@@ -223,13 +232,13 @@ namespace raptor
         }
         delete[] *addl_val;
     }
-    void mult_vals(double val, double addl_val, double* sum, 
-            int nr, int nc0, int n_inner) const
+    static void mult_vals(double val, double addl_val, double* sum,
+            int nr, int nc0, int n_inner)
     {
         *sum += (val * addl_val);
     }
-    void mult_vals(double* val, double* addl_val, double** sum,
-            int nr, int nc, int n_inner) const
+    static void mult_vals(double* val, double* addl_val, double** sum,
+            int nr, int nc, int n_inner)
     {
         for (int i = 0; i < nr; i++) // Go through b_rows of A
         { 
@@ -244,13 +253,13 @@ namespace raptor
             }
         }
     }
-    void mult_T_vals(double val, double addl_val, double* sum,
-            int nr, int nc, int n_inner) const
+    static void mult_T_vals(double val, double addl_val, double* sum,
+            int nr, int nc, int n_inner)
     {
         *sum += (val * addl_val);
     }
-    void mult_T_vals(double* val, double* addl_val, double** sum,
-            int nr, int nc, int n_inner) const
+    static void mult_T_vals(double* val, double* addl_val, double** sum,
+            int nr, int nc, int n_inner)
     {
         for (int i = 0; i < nr; i++) // Go through b_rows of A
         { 
@@ -267,19 +276,19 @@ namespace raptor
     }
 
 
-    void append(int _idx1, int _idx2, double* b, const double* x, const double val) const
+    static void append(int _idx1, int _idx2, double* b, const double* x, const double val)
     {
         b[_idx1] += val*x[_idx2];
     }
-    void append_T(int _idx1, int _idx2, double* b, const double* x, const double val) const
+    static void append_T(int _idx1, int _idx2, double* b, const double* x, const double val)
     {
         b[_idx2] += val*x[_idx1];
     }
-    void append_neg(int _idx1, int _idx2, double* b, const double* x, const double val) const
+    static void append_neg(int _idx1, int _idx2, double* b, const double* x, const double val)
     {
         b[_idx1] -= val*x[_idx2];
     }
-    void append_neg_T(int _idx1, int _idx2, double* b, const double* x, const double val) const
+    static void append_neg_T(int _idx1, int _idx2, double* b, const double* x, const double val)
     {
         b[_idx2] -= val*x[_idx1];
     }
@@ -386,7 +395,7 @@ namespace raptor
     virtual void* get_data() = 0;
     virtual int data_size() const = 0;
     virtual void reserve_size(int size) = 0;
-    virtual double get_val(const int j, const int k) = 0;
+    virtual double get_val(int j, int k) = 0;
 
     std::vector<int> idx1;
     std::vector<int> idx2;
@@ -470,14 +479,9 @@ namespace raptor
         init_from_lists(rows, cols, data);
     }
 
-    COOMatrix()
-    {
-    }
+    COOMatrix() = default;
 
-    ~COOMatrix()
-    {
-
-    }
+    ~COOMatrix() = default;
 
     template <typename T>
     void init_from_dense(T* _data)
@@ -656,14 +660,9 @@ namespace raptor
         init_from_lists(rowptr, cols, data);
     }
 
-    CSRMatrix()
-    {
-    }
+    CSRMatrix() = default;
 
-    ~CSRMatrix()
-    {
-
-    }
+    ~CSRMatrix() = default;
 
     template <typename T>
     void init_from_dense(T* _data)
@@ -1300,8 +1299,6 @@ class BSCMatrix : public CSCMatrix
 
     std::vector<double*> block_vals;
 };
-
-
 
 }
 

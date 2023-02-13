@@ -1,10 +1,14 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
+#include <numeric>
+#include <vector>
+
 #include "cf_splitting.hpp"
+#include "core/matrix.hpp"
 
 // TODO - parts of cf_splitting were taken from pyamg... how to cite this?
 
-using namespace raptor;
+namespace raptor {
 
 // Declare Private Methods
 void transpose(const CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& col_indices);
@@ -23,11 +27,9 @@ void update_weights(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& c
 int update_states(int remaining, std::vector<int>& unassigned, std::vector<int>& states,
         std::vector<double>& weights);
 void cljp_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& col_indices,
-        std::vector<int>& states, double* rand_vals = NULL);
+        std::vector<int>& states, const double* rand_vals = nullptr);
 void pmis_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& col_indices,
-        std::vector<int>& states, double* rand_vals);
-
-
+        std::vector<int>& states, const double* rand_vals);
 
 void transpose(const CSRMatrix* S,
         std::vector<int>& col_ptr,
@@ -500,7 +502,7 @@ int update_states(int remaining, std::vector<int>& unassigned, std::vector<int>&
 }
 
 void cljp_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& col_indices,
-        std::vector<int>& states, double* rand_vals)
+        std::vector<int>& states, const double* rand_vals)
 {
     int num_new_coarse;
     int remaining;
@@ -536,7 +538,7 @@ void cljp_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& c
     }
     else
     {
-        srand(time(NULL));
+        srand(time(nullptr));
         for (int i = 0; i < S->n_rows; i++)
         {
             // Random value [0,1)
@@ -577,7 +579,7 @@ void cljp_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& c
 }
 
 void pmis_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& col_indices,
-        std::vector<int>& states, double* rand_vals)
+        std::vector<int>& states, const double* rand_vals)
 {
     int num_new_coarse;
     int start, end, col, row;
@@ -669,7 +671,7 @@ void pmis_main_loop(CSRMatrix* S, std::vector<int>& col_ptr, std::vector<int>& c
 
 void split_cljp(CSRMatrix* S, 
         std::vector<int>& states,
-        double* rand_vals)
+        const double* rand_vals)
 {
     std::vector<int> col_ptr;
     std::vector<int> col_indices;
@@ -697,7 +699,7 @@ void split_cljp(CSRMatrix* S,
 }
 
 
-void split_pmis(CSRMatrix* S, std::vector<int>& states, double* rand_vals)
+void split_pmis(CSRMatrix* S, std::vector<int>& states, const double* rand_vals)
 {
     std::vector<int> col_ptr;
     std::vector<int> col_indices;
@@ -722,4 +724,5 @@ void split_pmis(CSRMatrix* S, std::vector<int>& states, double* rand_vals)
     pmis_main_loop(S, col_ptr, col_indices, states, rand_vals);
 }
 
+}
 

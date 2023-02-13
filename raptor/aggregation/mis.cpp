@@ -1,5 +1,7 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
+#include <numeric>
+
 #include "aggregation/mis.hpp"
 #include "core/types.hpp"
 #include "core/matrix.hpp"
@@ -7,7 +9,7 @@
 namespace raptor {
 
 void mis2(CSRMatrix* A, std::vector<int>& states,
-        double* rand_vals)
+        const double* rand_vals)
 {
     int start, end, col;
     int start_k, end_k;

@@ -1,10 +1,9 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef PARTITION_HPP 
-#define PARTITION_HPP
+#pragma once
 
 #include <mpi.h>
-#include <math.h>
+#include <cmath>
 #include <set>
 
 #include "types.hpp"
@@ -37,7 +36,7 @@ namespace raptor
   {
   public:
     Partition(index_t _global_num_rows, index_t _global_num_cols,
-            Topology* _topology = NULL)
+            Topology* _topology = nullptr)
     {
         int rank, num_procs;
         int avg_num;
@@ -98,7 +97,7 @@ namespace raptor
 
         create_assumed_partition();
 
-        if (_topology == NULL)
+        if (_topology == nullptr)
         {
             topology = new Topology();
         }
@@ -110,7 +109,7 @@ namespace raptor
     }
 
     Partition(index_t _global_num_rows, index_t _global_num_cols,
-            index_t _brows, index_t _bcols, Topology* _topology = NULL)
+            index_t _brows, index_t _bcols, Topology* _topology = nullptr)
     {
         int rank, num_procs;
         int avg_num_blocks, global_num_row_blocks, global_num_col_blocks;
@@ -174,7 +173,7 @@ namespace raptor
 
         create_assumed_partition();
 
-        if (_topology == NULL)
+        if (_topology == nullptr)
         {
             topology = new Topology();
         }
@@ -188,7 +187,7 @@ namespace raptor
     Partition(index_t _global_num_rows, index_t _global_num_cols,
             int _local_num_rows, int _local_num_cols,
             index_t _first_local_row, index_t _first_local_col,
-            Topology* _topology = NULL)
+            Topology* _topology = nullptr)
     {
         global_num_rows = _global_num_rows;
         global_num_cols = _global_num_cols;
@@ -203,7 +202,7 @@ namespace raptor
 
         create_assumed_partition();
 
-        if (_topology == NULL)
+        if (_topology == nullptr)
         {
             topology = new Topology();
         }
@@ -214,9 +213,9 @@ namespace raptor
         }
     }
 
-    Partition(Topology* _topology = NULL)
+    Partition(Topology* _topology = nullptr)
     {
-        if (_topology == NULL)
+        if (_topology == nullptr)
         {
             topology = new Topology();
         }
@@ -262,7 +261,7 @@ namespace raptor
         topology->num_shared++;
     }
 
-    Partition* transpose()
+    Partition* transpose() const
     {
         return new Partition(global_num_cols, global_num_rows,
                 local_num_cols, local_num_rows, first_local_col,
@@ -307,10 +306,9 @@ namespace raptor
         int global_col, assumed_proc;
         int ctr = 0;
         off_proc_col_to_proc.resize(off_proc_column_map.size());
-        for (std::vector<int>::const_iterator it = off_proc_column_map.begin();
-                        it != off_proc_column_map.end(); ++it)
+        for (int it : off_proc_column_map)
         {
-            global_col = *it;
+            global_col = it;
             assumed_proc = global_col / assumed_num_cols;
             while (global_col < first_cols[assumed_proc])
             {
@@ -343,7 +341,3 @@ namespace raptor
 
   };
 }
-#endif
-
-
-

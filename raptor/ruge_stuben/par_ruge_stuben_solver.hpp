@@ -18,7 +18,7 @@ namespace raptor
         {
             coarsen_type = _coarsen_type;
             interp_type = _interp_type;
-            variables = NULL;
+            variables = nullptr;
             num_variables = 1;
             interp_filter = 0.3; // Only used in HMIS/PMIS
         }

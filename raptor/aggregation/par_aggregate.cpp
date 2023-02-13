@@ -1,10 +1,13 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "aggregation/par_aggregate.hpp"
+#include "core/par_matrix.hpp"
+
+namespace raptor {
 
 int aggregate(ParCSRMatrix* A, ParCSRMatrix* S, std::vector<int>& states,
         std::vector<int>& off_proc_states, std::vector<int>& aggregates,
-        bool tap_comm, double* rand_vals)
+        bool tap_comm, const double* rand_vals)
 {
     int rank, num_procs;
     RAPtor_MPI_Comm_rank(RAPtor_MPI_COMM_WORLD, &rank);
@@ -182,3 +185,4 @@ int aggregate(ParCSRMatrix* A, ParCSRMatrix* S, std::vector<int>& states,
     return n_aggs;
 }
 
+}

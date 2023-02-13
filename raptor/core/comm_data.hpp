@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_COMMDATA_HPP
-#define RAPTOR_CORE_COMMDATA_HPP
+#pragma once
 
 #define WITH_RAPtor_MPI 1
 
@@ -1424,5 +1423,4 @@ public:
 }; 
 
 }
-#endif
 

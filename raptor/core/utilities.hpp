@@ -1,7 +1,7 @@
-#ifndef RAPTOR_CORE_UTILITIES_HPP
-#define RAPTOR_CORE_UTILITIES_HPP
+#pragma once
 
-#include "core/types.hpp"
+#include <numeric>
+#include <vector>
 
 using namespace raptor;
 
@@ -11,6 +11,8 @@ extern "C" void dgetrf_(int* dim1, int* dim2, double* a, int* lda,
 extern "C" void dgetrs_(char *TRANS, int *N, int *NRHS, double *A, 
         int *LDA, int *IPIV, double *B, int *LDB, int *INFO );
 
+
+namespace raptor {
 
 template <typename T, typename U>
 void vec_sort(std::vector<T>& vec1, std::vector<U>& vec2, int start = 0, int end = -1)
@@ -95,6 +97,4 @@ void vec_sort(std::vector<T>& vec1, std::vector<T>& vec2,
     }
 }
 
-
-
-#endif
+}

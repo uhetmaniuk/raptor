@@ -9,6 +9,6 @@ namespace raptor {
     class CSRMatrix;
 
     void mis2(CSRMatrix* A, std::vector<int>& states,
-              double* rand_vals = nullptr);
+              const double* rand_vals = nullptr);
 
 }

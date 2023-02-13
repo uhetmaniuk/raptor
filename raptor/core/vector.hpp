@@ -2,6 +2,8 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
+#include <vector>
+
 #include "core/types.hpp"
 
 // Vector Class

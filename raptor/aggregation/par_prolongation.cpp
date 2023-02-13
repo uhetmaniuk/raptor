@@ -2,6 +2,9 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 
 #include "aggregation/par_prolongation.hpp"
+#include "core/par_matrix.hpp"
+
+namespace raptor {
 
 // Assuming weighting = local (not getting approx spectral radius)
 ParCSRMatrix* jacobi_prolongation(ParCSRMatrix* A, ParCSRMatrix* T, bool tap_comm,
@@ -84,7 +87,7 @@ ParCSRMatrix* jacobi_prolongation(ParCSRMatrix* A, ParCSRMatrix* T, bool tap_com
         delete AP_tmp;
         delete P;
         P = P_tmp;
-        P_tmp = NULL;
+        P_tmp = nullptr;
     }
 
     if (tap_comm)
@@ -100,5 +103,7 @@ ParCSRMatrix* jacobi_prolongation(ParCSRMatrix* A, ParCSRMatrix* T, bool tap_com
     delete scaled_A;
     
     return P;
+}
+
 }
 

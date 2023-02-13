@@ -1,10 +1,9 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef TOPOLOGY_HPP 
-#define TOPOLOGY_HPP
+#pragma once
 
 #include <mpi.h>
-#include <math.h>
+#include <cmath>
 #include <set>
 
 #include "types.hpp"
@@ -32,7 +31,7 @@ namespace raptor
   class Topology
   {
   public:
-    Topology(int _PPN = 16, int _standard_rank_ordering = 1)
+    Topology(int PPN_ = 16, int standard_rank_ordering_ = 1)
     {     
         int rank, num_procs;
         RAPtor_MPI_Comm_rank(RAPtor_MPI_COMM_WORLD, &rank);
@@ -48,7 +47,7 @@ namespace raptor
         }
         else
         {
-            PPN = _PPN;
+            PPN = PPN_;
         }
 
         if (proc_layout_c)
@@ -57,7 +56,7 @@ namespace raptor
         }
         else
         {
-            rank_ordering = _standard_rank_ordering;
+            rank_ordering = standard_rank_ordering_;
         }
 
         num_nodes = num_procs / PPN;
@@ -74,7 +73,7 @@ namespace raptor
         RAPtor_MPI_Comm_free(&local_comm);
     }
 
-    int get_node(int proc)
+    int get_node(int proc) const
     {
         if (rank_ordering == 0)
         {
@@ -107,7 +106,7 @@ namespace raptor
         }
     }
 
-    int get_local_proc(int proc)
+    int get_local_proc(int proc) const
     {
         if (rank_ordering == 0 || rank_ordering == 2)
         {
@@ -129,7 +128,7 @@ namespace raptor
         }
     }
 
-    int get_global_proc(int node, int local_proc)
+    int get_global_proc(int node, int local_proc) const
     {
         if (rank_ordering == 0)
         {
@@ -170,5 +169,3 @@ namespace raptor
     RAPtor_MPI_Comm local_comm;
   };
 }
-
-#endif

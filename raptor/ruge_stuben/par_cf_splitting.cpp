@@ -1,15 +1,18 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "par_cf_splitting.hpp"
+#include "cf_splitting.hpp"
 
-using namespace raptor;
+#include "core/par_matrix.hpp"
+
+namespace raptor {
 
 // Declare Private Methods
 void transpose(const ParCSRMatrix* S, std::vector<int>& on_col_ptr, 
         std::vector<int>& off_col_ptr, std::vector<int>& on_col_indices,
         std::vector<int>& off_col_indices);
 void initial_weights(const ParCSRMatrix* S, CommPkg* comm, std::vector<double>& weights, 
-        double* rand_vals = NULL);
+        const double* rand_vals = nullptr);
 void find_max_off_weights(CommPkg* comm, const std::vector<int>& off_col_ptr,
         const std::vector<int>& off_col_indices, const std::vector<int>& states,
         const std::vector<int>& off_proc_states, const std::vector<double>& weights,
@@ -84,7 +87,7 @@ void split_rs(ParCSRMatrix* S, std::vector<int>& states,
 
 void split_cljp(ParCSRMatrix* S, std::vector<int>& states, 
         std::vector<int>& off_proc_states, bool tap_cf, 
-        double* rand_vals)
+        const double* rand_vals)
 {
     S->on_proc->move_diag();
 
@@ -102,7 +105,7 @@ void split_cljp(ParCSRMatrix* S, std::vector<int>& states,
 
 void split_falgout(ParCSRMatrix* S, std::vector<int>& states, 
         std::vector<int>& off_proc_states, bool tap_cf, 
-        double* rand_vals)
+        const double* rand_vals)
 {
     S->on_proc->move_diag();
 
@@ -127,7 +130,7 @@ void split_falgout(ParCSRMatrix* S, std::vector<int>& states,
 
 void split_pmis(ParCSRMatrix* S, std::vector<int>& states,
         std::vector<int>& off_proc_states, bool tap_cf, 
-        double* rand_vals)
+        const double* rand_vals)
 {
     S->on_proc->move_diag();
 
@@ -141,7 +144,7 @@ void split_pmis(ParCSRMatrix* S, std::vector<int>& states,
 
 void split_hmis(ParCSRMatrix* S, std::vector<int>& states,
         std::vector<int>& off_proc_states, bool tap_cf, 
-        double* rand_vals)
+        const double* rand_vals)
 {
     S->on_proc->move_diag();
 
@@ -297,7 +300,7 @@ void transpose(const ParCSRMatrix* S,
 void initial_weights(const ParCSRMatrix* S,
         CommPkg* comm, 
         std::vector<double>& weights, 
-        double* rand_vals)
+        const double* rand_vals)
 {
     int start, end;
     int idx;
@@ -319,7 +322,7 @@ void initial_weights(const ParCSRMatrix* S,
     }
     else
     {
-        srand(time(NULL));
+        srand(time(nullptr));
         for (int i = 0; i < S->on_proc_num_cols; i++)
         {
             weights[i] = ((double)(rand())) / RAND_MAX;
@@ -1273,7 +1276,7 @@ int update_states(std::vector<double>& weights,
 void pmis_main_loop(ParCSRMatrix* S,
         std::vector<int>& states,
         std::vector<int>& off_proc_states,
-        bool tap_comm, double* rand_vals)
+        bool tap_comm, const double* rand_vals)
 {
     int start, end, row;
     int idx;
@@ -1427,7 +1430,7 @@ void pmis_main_loop(ParCSRMatrix* S,
 void cljp_main_loop(ParCSRMatrix* S,
         std::vector<int>& states,
         std::vector<int>& off_proc_states,
-        bool tap_comm, double* rand_vals)
+        bool tap_comm, const double* rand_vals)
 {
     /**********************************************
      * Declare and Initialize Variables
@@ -1638,3 +1641,4 @@ void cljp_main_loop(ParCSRMatrix* S,
     delete[] part_to_col;
 }
 
+}

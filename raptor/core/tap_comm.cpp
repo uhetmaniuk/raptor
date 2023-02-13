@@ -2,6 +2,8 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "comm_pkg.hpp"
 
+#include <map>
+
 //#include <pmi.h>
 //#include <rca_lib.h>
 
