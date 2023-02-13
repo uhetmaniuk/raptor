@@ -34,11 +34,7 @@ namespace raptor
         {
             // TODO -- add option for B to be passed as variable
             num_candidates = 1;
-            B.resize(Af->n_rows);
-            for (int i = 0; i < Af->n_rows; i++)
-            {
-                B[i] = 1.0;
-            }
+            B.resize(Af->n_rows, 1.0);
             setup_helper(Af);
         }
 
@@ -63,11 +59,8 @@ namespace raptor
             // Aggregate Nodes
             switch (agg_type)
             {
-                case MIS:
-                    mis2(S, states, weights);
-                    n_aggs = aggregate(A, S, states, aggregates);
-                    break;
                 default:
+                case MIS:
                     mis2(S, states, weights);
                     n_aggs = aggregate(A, S, states, aggregates);
                     break;
@@ -78,10 +71,8 @@ namespace raptor
             
             switch (prolong_type)
             {
-                case JacobiProlongation:
-                    P = jacobi_prolongation(A, T, prolong_weight, prolong_smooth_steps);
-                    break;
                 default:
+                case JacobiProlongation:
                     P = jacobi_prolongation(A, T, prolong_weight, prolong_smooth_steps);
                     break;
             }

@@ -27,30 +27,28 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     int off_proc_num_cols;
     std::set<int> off_proc_col_set;
     std::vector<int> off_proc_column_map;
-    for (std::vector<int>::const_iterator it = aggregates.begin();
-            it != aggregates.end(); ++it)
+    for (int aggregate : aggregates)
     {
-        if (*it < 0) continue;
+        if (aggregate < 0) continue;
 
-        if (*it < A->partition->first_local_col || *it > A->partition->last_local_col)
+        if (aggregate < A->partition->first_local_col || aggregate > A->partition->last_local_col)
         {
-            off_proc_col_set.insert(*it);
+            off_proc_col_set.insert(aggregate);
         }
     } 
     std::map<int, int> global_to_local;
-    for (std::set<int>::iterator it = off_proc_col_set.begin();
-            it != off_proc_col_set.end(); ++it)
+    for (int it : off_proc_col_set)
     {
-        global_to_local[*it] = off_proc_column_map.size();
-        off_proc_column_map.emplace_back(*it);
+        global_to_local[it] = off_proc_column_map.size();
+        off_proc_column_map.emplace_back(it);
     }
     off_proc_num_cols = off_proc_column_map.size();
 
     std::vector<int> on_proc_cols(A->on_proc_num_cols, 0);
     // Create AggOp matrices
     int* on_proc_partition_to_col = A->map_partition_to_local();
-    CSRMatrix* AggOp_on = new CSRMatrix(A->local_num_rows, -1);
-    CSRMatrix* AggOp_off = new CSRMatrix(A->local_num_rows, -1);
+    auto* AggOp_on = new CSRMatrix(A->local_num_rows, -1);
+    auto* AggOp_off = new CSRMatrix(A->local_num_rows, -1);
     AggOp_on->idx1[0] = 0;
     AggOp_off->idx1[0] = 0;
     for (int i = 0; i < A->local_num_rows; i++)
@@ -82,13 +80,13 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     // Initialize CSC Matrix for tentative interpolation
     int global_num_cols;
     RAPtor_MPI_Allreduce(&n_aggs, &global_num_cols, 1, RAPtor_MPI_INT, RAPtor_MPI_SUM, RAPtor_MPI_COMM_WORLD);
-    ParCSCMatrix* T_csc = new ParCSCMatrix(A->partition, A->global_num_rows, global_num_cols, 
+    ParCSCMatrix T_csc(A->partition, A->global_num_rows, global_num_cols,
             A->local_num_rows, n_aggs, off_proc_num_cols);
         
-    T_csc->off_proc_column_map.resize(off_proc_num_cols);
+    T_csc.off_proc_column_map.resize(off_proc_num_cols);
     std::copy(off_proc_column_map.begin(), off_proc_column_map.end(),
-            T_csc->off_proc_column_map.begin());
-    T_csc->local_row_map = A->get_local_row_map();
+            T_csc.off_proc_column_map.begin());
+    T_csc.local_row_map = A->get_local_row_map();
 
     // Map on proc columns to new, contiguous cols
     // Create on_proc_column_map of T
@@ -96,8 +94,8 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     {
         if (on_proc_cols[i])
         {
-            on_proc_cols[i] = T_csc->on_proc_column_map.size();
-            T_csc->on_proc_column_map.emplace_back(A->on_proc_column_map[i]);
+            on_proc_cols[i] = T_csc.on_proc_column_map.size();
+            T_csc.on_proc_column_map.emplace_back(A->on_proc_column_map[i]);
         }
     }
     for (int i = 0; i < AggOp_on->nnz; i++)
@@ -123,7 +121,7 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     std::vector<double> off_proc_norms(off_proc_num_cols, 0);
     // Add columns of B to T (corresponding to pattern in AggOp)
     // Add on_process columns
-    T_csc->on_proc->idx1[0] = 0;
+    T_csc.on_proc->idx1[0] = 0;
     for (int i = 0; i < n_aggs; i++)
     {
         col_start = AggOp_on_csc->idx1[i];
@@ -132,17 +130,17 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
         {
             row = AggOp_on_csc->idx2[k];
             val = B[row];
-            T_csc->on_proc->idx2.emplace_back(row);
-            T_csc->on_proc->vals.emplace_back(val);
+            T_csc.on_proc->idx2.emplace_back(row);
+            T_csc.on_proc->vals.emplace_back(val);
             R[i] += (val * val);
         }
-        T_csc->on_proc->idx1[i + 1] = T_csc->on_proc->idx2.size();
+        T_csc.on_proc->idx1[i + 1] = T_csc.on_proc->idx2.size();
     }
-    T_csc->on_proc->nnz = T_csc->on_proc->idx2.size();
+    T_csc.on_proc->nnz = T_csc.on_proc->idx2.size();
     delete AggOp_on_csc;
 
     // Add off_process columns
-    T_csc->off_proc->idx1[0] = 0;
+    T_csc.off_proc->idx1[0] = 0;
     for (int i = 0; i < off_proc_num_cols; i++)
     {
         col_start = AggOp_off_csc->idx1[i];
@@ -151,27 +149,27 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
         {
             row = AggOp_off_csc->idx2[k];
             val = B[row];
-            T_csc->off_proc->idx2.emplace_back(row);
-            T_csc->off_proc->vals.emplace_back(val);
+            T_csc.off_proc->idx2.emplace_back(row);
+            T_csc.off_proc->vals.emplace_back(val);
             off_proc_norms[i] += (val * val);
         }
-        T_csc->off_proc->idx1[i + 1] = T_csc->off_proc->idx2.size();
+        T_csc.off_proc->idx1[i + 1] = T_csc.off_proc->idx2.size();
     }
-    T_csc->off_proc->nnz = T_csc->off_proc->idx2.size();
+    T_csc.off_proc->nnz = T_csc.off_proc->idx2.size();
     delete AggOp_off_csc;
 
     // Create communicator
     if (tap_comm)
     {
-        T_csc->tap_comm = new TAPComm(T_csc->partition, T_csc->off_proc_column_map,
-                T_csc->on_proc_column_map, true, A->comm->mpi_comm);
-        comm = T_csc->tap_comm;
+        T_csc.tap_comm = new TAPComm(T_csc.partition, T_csc.off_proc_column_map,
+                T_csc.on_proc_column_map, true, A->comm->mpi_comm);
+        comm = T_csc.tap_comm;
     }
     else
     {
-        T_csc->comm = new ParComm(T_csc->partition, T_csc->off_proc_column_map,
-                T_csc->on_proc_column_map, A->comm->key, A->comm->mpi_comm);
-        comm = T_csc->comm;
+        T_csc.comm = new ParComm(T_csc.partition, T_csc.off_proc_column_map,
+                T_csc.on_proc_column_map, A->comm->key, A->comm->mpi_comm);
+        comm = T_csc.comm;
     }
 
     std::function<double(double, double)> func = &sum_func<double, double>;
@@ -182,11 +180,11 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
         R[i] = sqrt(R[i]);
         scale = 1.0 / R[i];
 
-        col_start = T_csc->on_proc->idx1[i];
-        col_end = T_csc->on_proc->idx1[i+1];
+        col_start = T_csc.on_proc->idx1[i];
+        col_end = T_csc.on_proc->idx1[i+1];
         for (int j = col_start; j < col_end; j++)
         {
-            T_csc->on_proc->vals[j] *= scale;
+            T_csc.on_proc->vals[j] *= scale;
         }
     }
     
@@ -196,18 +194,15 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     {
         scale = 1.0 / off_proc_R[i];
 
-        col_start = T_csc->off_proc->idx1[i];
-        col_end = T_csc->off_proc->idx1[i+1];
+        col_start = T_csc.off_proc->idx1[i];
+        col_end = T_csc.off_proc->idx1[i+1];
         for (int j = col_start; j < col_end; j++)
         {
-            T_csc->off_proc->vals[j] *= scale;
+            T_csc.off_proc->vals[j] *= scale;
         }
     }
 
-    ParCSRMatrix* T = T_csc->to_ParCSR();
-    delete T_csc;
-
-    return T;
+    return T_csc.to_ParCSR();
 }
 
 }

@@ -1,9 +1,12 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "aggregation/aggregate.hpp"
+#include "core/matrix.hpp"
+
+namespace raptor {
 
 int aggregate(CSRMatrix* A, CSRMatrix* S, std::vector<int>& states,
-        std::vector<int>& aggregates, double* rand_vals)
+        std::vector<int>& aggregates, const double* rand_vals)
 {
     if (A->n_rows == 0)
     {
@@ -92,4 +95,6 @@ int aggregate(CSRMatrix* A, CSRMatrix* S, std::vector<int>& states,
     }
 
     return n_aggs;
+}
+
 }

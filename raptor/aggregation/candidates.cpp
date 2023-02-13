@@ -29,7 +29,7 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
     delete AggOp;
 
     // Initialize CSC matrix for tentative interpolation
-    CSCMatrix* T_csc = new CSCMatrix(n_rows, n_aggs * num_candidates, n_rows * num_candidates);
+    CSCMatrix T_csc(n_rows, n_aggs * num_candidates, n_rows * num_candidates);
     
     // Set near nullspace candidates in R to 0
     R.resize(n_aggs);
@@ -39,7 +39,7 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
     }
 
     // Add columns of B to T (corresponding to pattern in AggOp)
-    T_csc->idx1[0] = 0;
+    T_csc.idx1[0] = 0;
     for (int i = 0; i < n_aggs; i++)
     {
         col_start = AggOp_csc->idx1[i];
@@ -51,13 +51,13 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
                 row = AggOp_csc->idx2[k];
                 idx_B = (j*n_rows) + row;
                 val = B[idx_B];
-                T_csc->idx2.emplace_back(row);
-                T_csc->vals.emplace_back(val);
+                T_csc.idx2.emplace_back(row);
+                T_csc.vals.emplace_back(val);
             }
-            T_csc->idx1[i*num_candidates + j + 1] = T_csc->idx2.size();
+            T_csc.idx1[i*num_candidates + j + 1] = T_csc.idx2.size();
         }
     }
-    T_csc->nnz = T_csc->idx2.size();
+    T_csc.nnz = T_csc.idx2.size();
     delete AggOp_csc;
 
     for (int i = 0; i < n_aggs; i++)
@@ -67,14 +67,14 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
         for (int j = 0; j < num_candidates; j++)
         {
             double norm_j = 0;
-            int col_start_j = T_csc->idx1[i*num_candidates + j];
-            int col_end_j = T_csc->idx1[i*num_candidates + j + 1];
+            int col_start_j = T_csc.idx1[i*num_candidates + j];
+            int col_end_j = T_csc.idx1[i*num_candidates + j + 1];
             int col_size = col_end_j - col_start_j;
 
             // Calculate norm of column
             for (int k = col_start_j; k < col_end_j; k++)
             {
-                val = T_csc->vals[k];
+                val = T_csc.vals[k];
                 norm_j += val * val;
             }
             norm_j = sqrt(norm_j);
@@ -87,19 +87,19 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
             {
                 // Calculate dot product with previous candidate vector            
                 double dot_prod = 0;
-                int col_start_k = T_csc->idx1[i*num_candidates + k];
+                int col_start_k = T_csc.idx1[i*num_candidates + k];
                 for (int l = 0; l < col_size; l++)
                 {
-                    double val_k = T_csc->vals[col_start_k + l];
-                    double val_j = T_csc->vals[col_start_j + l];
+                    double val_k = T_csc.vals[col_start_k + l];
+                    double val_j = T_csc.vals[col_start_j + l];
                     dot_prod += val_k * val_j;
                 }
 
                 // Orthogonalize against col k
                 for (int l = 0; l < col_size; l++)
                 {
-                    double val_k = T_csc->vals[col_start_k + l];
-                    T_csc->vals[col_start_j + l] -= dot_prod * val_k;
+                    double val_k = T_csc.vals[col_start_k + l];
+                    T_csc.vals[col_start_j + l] -= dot_prod * val_k;
                 }
 
                 // Update value in R
@@ -110,7 +110,7 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
             norm_j = 0;
             for (int k = col_start_j; k < col_end_j; k++)
             {
-                val = T_csc->vals[k];
+                val = T_csc.vals[k];
                 norm_j += val * val;
             }
             norm_j = sqrt(norm_j);
@@ -129,15 +129,13 @@ CSRMatrix* fit_candidates(const int n_aggs, const std::vector<int>& aggregates,
 
             for (int k = col_start_j; k < col_end_j; k++)
             {
-                T_csc->vals[k] *= scale;
+                T_csc.vals[k] *= scale;
             }
         }
     }
 
-    CSRMatrix* T = T_csc->to_CSR();
-    delete T_csc;
+    return T_csc.to_CSR();
 
-    return T;
 }
 
 }
