@@ -1,6 +1,9 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "aggregation/par_mis.hpp"
+#include "core/par_matrix.hpp"
+
+namespace raptor {
 
 // Declare Private Methods
 void comm_states(const ParCSRMatrix* A, CommPkg* comm, 
@@ -649,5 +652,7 @@ int mis2(const ParCSRMatrix* A, std::vector<int>& states,
     delete A_off_csc;
 
     return iterate;
+}
+
 }
 

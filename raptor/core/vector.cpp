@@ -30,7 +30,7 @@ void Vector::set_const_value(data_t alpha)
 **************************************************************/
 void Vector::set_rand_values()
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     for (index_t i = 0; i < num_values; i++)
     {
         values[i] = ((double)rand()) / RAND_MAX;
@@ -104,7 +104,7 @@ void Vector::scale(data_t alpha)
 ***** p : index_t
 *****    Determines which p-norm to calculate
 **************************************************************/
-data_t Vector::norm(index_t p)
+data_t Vector::norm(index_t p) const
 {
     data_t result = 0.0;
     double val;
@@ -146,13 +146,17 @@ void Vector::print(const char* vec_name)
 ***** ------------
 ***** data_t& element at position passed
 **************************************************************/
-data_t& Vector::operator[](const int index)
+data_t& Vector::operator[](int index)
 {
     return values[index];
 }
 
+const data_t& Vector::operator[](int index) const
+{
+    return values[index];
+}
 
-data_t Vector::inner_product(Vector& x)
+data_t Vector::inner_product(const Vector& x) const
 {
     data_t result = 0.0;
 

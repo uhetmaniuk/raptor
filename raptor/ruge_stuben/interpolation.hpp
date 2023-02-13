@@ -1,23 +1,31 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_DIRECT_INTERPOLATION_HPP
-#define RAPTOR_DIRECT_INTERPOLATION_HPP
+#pragma once
 
-#include "core/types.hpp"
-#include "core/matrix.hpp"
+#include <vector>
 
-using namespace raptor;
+namespace raptor {
 
-CSRMatrix* direct_interpolation(CSRMatrix* A, 
-        CSRMatrix* S, const std::vector<int>& states);
+    class CSRMatrix;
 
-CSRMatrix* mod_classical_interpolation(CSRMatrix* A,
-        CSRMatrix* S, const std::vector<int>& states, int num_variables = 1,
-        int* variables = NULL);
+    CSRMatrix *direct_interpolation(CSRMatrix * A,
+                                    CSRMatrix * S,
+    const std::vector<int> &states
+    );
 
-CSRMatrix* extended_interpolation(CSRMatrix* A,
-        CSRMatrix* S, const std::vector<int>& states, int num_variables = 1,
-        int* variables = NULL);
+    CSRMatrix *mod_classical_interpolation(CSRMatrix * A,
+                                           CSRMatrix * S,
+    const std::vector<int> &states,
+    int num_variables = 1,
+    const int *variables = nullptr
+    );
 
-#endif
+    CSRMatrix *extended_interpolation(CSRMatrix * A,
+                                      CSRMatrix * S,
+    const std::vector<int> &states,
+    int num_variables = 1,
+    int *variables = nullptr
+    );
+
+}
 

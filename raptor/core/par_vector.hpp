@@ -1,14 +1,7 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_PARVECTOR_HPP
-#define RAPTOR_CORE_PARVECTOR_HPP
+#pragma once
 
-#include "assert.h"
-
-#include <mpi.h>
-#include <math.h>
-
-#include "mpi_types.hpp"
 #include "vector.hpp"
 
 /**************************************************************
@@ -57,7 +50,7 @@ namespace raptor
         ***** lcl_n : index_t
         *****    Number of entries of global vector stored locally
         **************************************************************/
-        ParVector(index_t glbl_n, int lcl_n)
+        ParVector(index_t glbl_n, int lcl_n) : local(), global_n(glbl_n), local_n(lcl_n)
         {
             resize(glbl_n, lcl_n);
         }
@@ -72,19 +65,14 @@ namespace raptor
         **************************************************************
         ***** Creates an empy ParVector (local_n = 0)
         **************************************************************/
-        ParVector()
-        {
-            local_n = 0;
-        }
+        ParVector() : local(), global_n(0), local_n(0) {}
 
         /**************************************************************
         *****   ParVector Class Destructor
         **************************************************************
         ***** Deletes the local vector
         **************************************************************/
-        ~ParVector()
-        {
-        }
+        ~ParVector() = default;
 
         void resize(index_t glbl_n, int lcl_n)
         {
@@ -156,16 +144,16 @@ namespace raptor
         ***** p : index_t
         *****    Determines which p-norm to calculate
         **************************************************************/
-        data_t norm(index_t p);
+        data_t norm(index_t p) const;
 
-        data_t inner_product(ParVector& x);        
+        data_t inner_product(const ParVector& x) const;
 
-        const data_t& operator[](const int index) const
+        const data_t& operator[](int index) const
         {
             return local.values[index];
         }
 
-        data_t& operator[](const int index)
+        data_t& operator[](int index)
         {
             return local.values[index];
         }
@@ -176,4 +164,3 @@ namespace raptor
     };
 
 }
-#endif

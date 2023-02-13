@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_VECTOR_HPP_
-#define RAPTOR_CORE_VECTOR_HPP_
+#pragma once
 
 #include "core/types.hpp"
 
@@ -51,25 +50,16 @@ public:
     ***** len : index_t
     *****    Size of the vector
     **************************************************************/
-    Vector(int len)
-    {
-        resize(len);
-    }
+    explicit Vector(int len) : values(len), num_values(len) {}
 
     /**************************************************************
     *****   Vector Class Constructor
     **************************************************************
     ***** Initializes an empty vector without setting the size
     **************************************************************/
-    Vector()
-    {
-        num_values = 0;
-    }
+    Vector() : values({}), num_values(0) {}
 
-    Vector(const Vector& v)
-    {
-       copy(v);
-    }
+    Vector(const Vector& v) = default;
 
     void resize(int len)
     {
@@ -146,7 +136,7 @@ public:
     ***** p : index_t
     *****    Determines which p-norm to calculate
      **************************************************************/
-    data_t norm(index_t p);
+    data_t norm(index_t p) const;
 
     /**************************************************************
     *****   Print Vector
@@ -169,7 +159,9 @@ public:
     ***** ------------
     ***** data_t& element at position passed
     **************************************************************/
-    data_t& operator[](const int index);
+    data_t& operator[](int index);
+
+    const data_t& operator[](int index) const;
 
     /**************************************************************
     *****   Vector Data
@@ -186,12 +178,12 @@ public:
         return values.data();
     }
 
-    index_t size()
+    index_t size() const
     {
         return num_values;
     }
 
-    data_t inner_product(Vector& x);
+    data_t inner_product(const Vector& x) const;
 
     std::vector<double> values;
     index_t num_values;
@@ -199,5 +191,3 @@ public:
 
 }
 
-
-#endif

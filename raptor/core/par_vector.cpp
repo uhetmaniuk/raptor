@@ -1,9 +1,13 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
+
+#include <mpi.h>
+#include <cmath>
+
+#include "mpi_types.hpp"
 #include "par_vector.hpp"
 
 using namespace raptor;
-
 
 /**************************************************************
 *****   Vector AXPY
@@ -85,7 +89,7 @@ void ParVector::set_rand_values()
 ***** p : index_t
 *****    Determines which p-norm to calculate
 **************************************************************/
-data_t ParVector::norm(index_t p)
+data_t ParVector::norm(index_t p) const
 {
     data_t result = 0.0;
     if (local_n)
@@ -98,7 +102,7 @@ data_t ParVector::norm(index_t p)
 }
 
 
-data_t ParVector::inner_product(ParVector& x)
+data_t ParVector::inner_product(const ParVector& x) const
 {
     data_t inner_prod = 0.0;
 

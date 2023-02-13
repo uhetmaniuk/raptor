@@ -1,10 +1,14 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "aggregation/par_candidates.hpp"
+#include "core/par_matrix.hpp"
+#include "core/mpi_types.hpp"
+
+namespace raptor {
 
 // TODO -- currently assumes B with single candidate
 ParCSRMatrix* fit_candidates(ParCSRMatrix* A, 
-        const int n_aggs, const std::vector<int>& aggregates, 
+        int n_aggs, const std::vector<int>& aggregates,
         const std::vector<double>& B, std::vector<double>& R,
         int num_candidates, bool tap_comm, double tol)
 {
@@ -206,8 +210,4 @@ ParCSRMatrix* fit_candidates(ParCSRMatrix* A,
     return T;
 }
 
-
-
-
-
-
+}

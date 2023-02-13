@@ -1,10 +1,11 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#include "assert.h"
+
 #include "core/types.hpp"
+#include "core/matrix.hpp"
 #include "interpolation.hpp"
 
-using namespace raptor;
+namespace raptor {
 
 CSRMatrix* extended_interpolation(CSRMatrix* A, CSRMatrix* S, 
         const std::vector<int>& states, int num_variables, int* variables)
@@ -195,16 +196,16 @@ CSRMatrix* extended_interpolation(CSRMatrix* A, CSRMatrix* S,
     }
     P->nnz = P->idx2.size();
 
-    for (std::vector<int>::iterator it = P->idx2.begin(); it != P->idx2.end(); ++it)
+    for (int & it : P->idx2)
     {
-        *it = col_to_new[*it];
+        it = col_to_new[it];
     }
 
     return P;
 }
 
 CSRMatrix* mod_classical_interpolation(CSRMatrix* A, CSRMatrix* S, 
-        const std::vector<int>& states, int num_variables, int* variables)
+        const std::vector<int>& states, int num_variables, const int* variables)
 {
     int startA, endA;
     int endS;
@@ -239,9 +240,9 @@ CSRMatrix* mod_classical_interpolation(CSRMatrix* A, CSRMatrix* S,
     //      - NS: values in A but not S
     //      - SS: selected values in S
     //      - SU: unselected values in S
-    CSRMatrix* NS = new CSRMatrix(A->n_rows, A->n_cols);
-    CSRMatrix* SS = new CSRMatrix(A->n_rows, A->n_cols);
-    CSRMatrix* SU = new CSRMatrix(A->n_rows, A->n_cols);
+    auto* NS = new CSRMatrix(A->n_rows, A->n_cols);
+    auto* SS = new CSRMatrix(A->n_rows, A->n_cols);
+    auto* SU = new CSRMatrix(A->n_rows, A->n_cols);
     NS->idx1[0] = 0;
     SS->idx1[0] = 0;
     SU->idx1[0] = 0;
@@ -307,7 +308,7 @@ CSRMatrix* mod_classical_interpolation(CSRMatrix* A, CSRMatrix* S,
     }
 
     // Form P
-    CSRMatrix* P = new CSRMatrix(A->n_rows, ctr, A->nnz);
+    auto* P = new CSRMatrix(A->n_rows, ctr, A->nnz);
 
     // Main loop.. add entries to P
     P->idx1[0] = 0;
@@ -593,6 +594,6 @@ CSRMatrix* direct_interpolation(CSRMatrix* A,
 
     return P;
 
-
+}
 
 }

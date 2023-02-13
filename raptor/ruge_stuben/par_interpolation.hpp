@@ -1,14 +1,14 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_PAR_DIRECT_INTERPOLATION_HPP
-#define RAPTOR_PAR_DIRECT_INTERPOLATION_HPP
+#pragma once
 
-#include "core/types.hpp"
-#include "core/par_matrix.hpp"
+#include <vector>
 
-using namespace raptor;
+namespace raptor {
 
-ParCSRMatrix* direct_interpolation(ParCSRMatrix* A, 
+    class ParCSRMatrix;
+
+ParCSRMatrix* direct_interpolation(ParCSRMatrix* A,
         ParCSRMatrix* S, const std::vector<int>& states,
         const std::vector<int>& off_proc_states,
         bool tap_amg = false);
@@ -16,12 +16,12 @@ ParCSRMatrix* direct_interpolation(ParCSRMatrix* A,
 ParCSRMatrix* mod_classical_interpolation(ParCSRMatrix* A,
         ParCSRMatrix* S, const std::vector<int>& states,
         const std::vector<int>& off_proc_states,
-        bool tap_amg = false, int num_variables = 1, int* variables = NULL);
+        bool tap_amg = false, int num_variables = 1, int* variables = nullptr);
 
 ParCSRMatrix* extended_interpolation(ParCSRMatrix* A,
         ParCSRMatrix* S, const std::vector<int>& states,
         const std::vector<int>& off_proc_states,
-        const double filter_threshold = 0.3,
-        bool tap_amg = false, int num_variables = 1, int* variables = NULL);
+        double filter_threshold = 0.3,
+        bool tap_amg = false, int num_variables = 1, int* variables = nullptr);
 
-#endif
+}

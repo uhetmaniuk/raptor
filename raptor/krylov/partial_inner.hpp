@@ -1,11 +1,10 @@
-#ifndef RAPTOR_KRYLOV_PAR_INNER_HPP
-#define RAPTOR_KRYLOV_PAR_INNER_HPP
+#pragma once
 
+#include "core/mpi_types.hpp"
 #include "core/types.hpp"
 #include "core/par_vector.hpp"
-#include <vector>
 
-using namespace raptor;
+namespace raptor {
 
 data_t half_inner_contig(ParVector &x, ParVector &y, int half, int part_global);
 
@@ -19,6 +18,7 @@ data_t partial_inner(RAPtor_MPI_Comm &inner_comm, RAPtor_MPI_Comm &root_comm, Pa
                      int send_color, int inner_root, int procs_in_group, int part_global);
 
 data_t sequential_inner(ParVector &x, ParVector &y);
+
 data_t sequential_norm(ParVector &x, index_t p);
 
-#endif
+}

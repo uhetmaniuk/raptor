@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_PAR_RUGE_STUBEN_SOLVER_HPP
-#define RAPTOR_PAR_RUGE_STUBEN_SOLVER_HPP
+#pragma once
 
 #include "multilevel/par_multilevel.hpp"
 #include "ruge_stuben/par_cf_splitting.hpp"
@@ -12,7 +11,7 @@ namespace raptor
     class ParRugeStubenSolver : public ParMultilevel
     {
       public:
-        ParRugeStubenSolver(double _strong_threshold = 0.0, coarsen_t _coarsen_type = RS, 
+        explicit ParRugeStubenSolver(double _strong_threshold = 0.0, coarsen_t _coarsen_type = RS,
                 interp_t _interp_type = Direct, strength_t _strength_type = Classical,
                 relax_t _relax_type = SOR) 
             : ParMultilevel(_strong_threshold, _strength_type, _relax_type)
@@ -24,14 +23,11 @@ namespace raptor
             interp_filter = 0.3; // Only used in HMIS/PMIS
         }
 
-        ~ParRugeStubenSolver()
-        {
+        ~ParRugeStubenSolver() override = default;
 
-        }
-
-        void setup(ParCSRMatrix *Af)
+        void setup(ParCSRMatrix *Af) override
         {
-            if (num_variables > 1 && variables == NULL) 
+            if (num_variables > 1 && variables == nullptr)
             {
                 form_variable_list(Af, num_variables);
             }
@@ -39,7 +35,7 @@ namespace raptor
             setup_helper(Af);
 
             if (num_variables > 1) delete[] variables;
-            variables = NULL;
+            variables = nullptr;
         }
        
         void form_variable_list(const ParCSRMatrix* A, const int num_var)
@@ -53,14 +49,14 @@ namespace raptor
             }
         }
 
-        void extend_hierarchy()
+        void extend_hierarchy() override
         {
             int level_ctr = levels.size() - 1;
             bool tap_level = tap_amg >= 0 && tap_amg <= level_ctr;
 
             ParCSRMatrix* A = levels[level_ctr]->A;
             ParCSRMatrix* S;
-            ParCSRMatrix* P = NULL;
+            ParCSRMatrix* P = nullptr;
             ParCSRMatrix* AP;
 
             std::vector<int> states;
@@ -176,8 +172,4 @@ namespace raptor
 
     };
 }
-   
-
-#endif
-
 
