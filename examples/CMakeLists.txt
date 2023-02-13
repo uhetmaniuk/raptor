@@ -48,8 +48,8 @@ if (WITH_MPI)
     add_executable(profile_tap_spgemm profile_tap_spgemm.cpp)
     target_link_libraries(profile_tap_spgemm raptor ${MPI_LIBRARIES})
 
-    add_executable(benchmark_amg benchmark_amg.cpp)
-    target_link_libraries(benchmark_amg raptor ${MPI_LIBRARIES})
+    add_executable(benchmark_par_amg benchmark_par_amg.cpp)
+    target_link_libraries(benchmark_par_amg raptor ${MPI_LIBRARIES})
 
     add_executable(benchmark_setup_sweeps benchmark_setup_sweeps.cpp)
     target_link_libraries(benchmark_setup_sweeps raptor ${MPI_LIBRARIES})
@@ -68,6 +68,12 @@ if (WITH_MPI)
 
     add_executable(model_tap_steps model_tap_steps.cpp)
     target_link_libraries(model_tap_steps raptor ${MPI_LIBRARIES})
+
+else()
+
+    add_executable(benchmark_amg benchmark_amg.cpp)
+    target_link_libraries(benchmark_amg raptor)
+
 endif()
 
 

@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_MATRIX_HPP
-#define RAPTOR_CORE_MATRIX_HPP
+#pragma once
 
 #include "types.hpp"
 #include "vector.hpp"
@@ -104,7 +103,7 @@ namespace raptor
         b_size = 1;
     }
 
-    virtual ~Matrix(){}
+    virtual ~Matrix() = default;
 
     template <typename T>
     void init_from_lists(std::vector<int>& _idx1, std::vector<int>& _idx2, 
@@ -146,8 +145,8 @@ namespace raptor
     virtual void spmv_append_neg_T(const double* x, double* b) const = 0;
     virtual void spmv_residual(const double* x, const double* b, double* r) const = 0;
 
-    virtual CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL) = 0;
-    virtual CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL) = 0;
+    virtual CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) = 0;
+    virtual CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) = 0;
     virtual Matrix* transpose() = 0;
 
     double* get_values(Vector& x) const
@@ -367,12 +366,12 @@ namespace raptor
         spmv_residual(get_values(x), get_values(b), get_values(r));
     }
 
-    CSRMatrix* mult(CSRMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* mult(CSCMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* mult(COOMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* mult_T(CSCMatrix* A, int* C_map = NULL);
-    CSRMatrix* mult_T(CSRMatrix* A, int* C_map = NULL);
-    CSRMatrix* mult_T(COOMatrix* A, int* C_map = NULL);
+    CSRMatrix* mult(CSRMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* mult(CSCMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* mult(COOMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* mult_T(CSCMatrix* A, int* C_map = nullptr);
+    CSRMatrix* mult_T(CSRMatrix* A, int* C_map = nullptr);
+    CSRMatrix* mult_T(COOMatrix* A, int* C_map = nullptr);
 
     virtual void add_value(int row, int col, double value) = 0;
     virtual void add_value(int row, int col, double* value) = 0;
@@ -526,8 +525,8 @@ namespace raptor
     void spmv_append_neg_T(const double* x, double* b) const;
     void spmv_residual(const double* x, const double* b, double* r) const; 
 
-    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr);
 
     COOMatrix* to_COO();
     CSRMatrix* to_CSR();
@@ -711,36 +710,36 @@ namespace raptor
     void spmv_append_neg_T(const double* x, double* b) const;
     void spmv_residual(const double* x, const double* b, double* r) const; 
 
-    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr);
 
     CSRMatrix* add(CSRMatrix* A, bool remove_dup = true);
     void add_append(CSRMatrix* A, CSRMatrix* C, bool remove_dup = true);
     CSRMatrix* subtract(CSRMatrix* A);
 
     CSRMatrix* strength(strength_t strength_type = Classical,
-            double theta = 0.0, int num_variables = 1, int* variables = NULL);
+            double theta = 0.0, int num_variables = 1, int* variables = nullptr);
     CSRMatrix* aggregate();
     CSRMatrix* fit_candidates(data_t* B, data_t* R, int num_candidates, 
             double tol = 1e-10);
 
-    COOMatrix* to_COO();
-    CSRMatrix* to_CSR();
-    CSCMatrix* to_CSC();
-    CSRMatrix* to_BSR();
-    CSCMatrix* to_BSC();
-    COOMatrix* to_BCOO();
+    COOMatrix* to_COO() override;
+    CSRMatrix* to_CSR() override;
+    CSCMatrix* to_CSC() override;
+    CSRMatrix* to_BSR() override;
+    CSCMatrix* to_BSC() override;
+    COOMatrix* to_BCOO() override;
 
-    void block_removal_col_check(bool* col_check);
+    void block_removal_col_check(bool* col_check) override;
 
-    CSRMatrix* copy();
+    CSRMatrix* copy() override;
 
-    format_t format()
+    format_t format() override
     {
         return CSR;
     }
 
-    void add_value(int row, int col, double value) 
+    void add_value(int row, int col, double value) override
     {
         if (fabs(value) > zero_tol)
         {
@@ -749,32 +748,32 @@ namespace raptor
             nnz++;
         }
     }
-    void add_value(int row, int col, double* value)
+    void add_value(int row, int col, double* value) override
     {
         idx2.emplace_back(col);
         vals.emplace_back(*value);
         nnz++;
     }
 
-    void* get_data()
+    void* get_data() override
     {
        return vals.data();
     } 
-    int data_size() const
+    int data_size() const override
     {
         return vals.size();
     }
-    void resize_data(int size)
+    void resize_data(int size) override
     {
         vals.resize(size);
     }
-    void reserve_size(int size)
+    void reserve_size(int size) override
     {
         idx2.reserve(size);
         vals.reserve(size);
     }
 
-    double get_val(const int j, const int k)
+    double get_val(const int j, const int k) override
     {
         return vals[j];
     }
@@ -873,43 +872,43 @@ namespace raptor
 
     }
 
-    CSCMatrix* transpose();
-    void print();
+    CSCMatrix* transpose() override;
+    void print() override;
 
-    void sort();
-    void move_diag();
-    void remove_duplicates();
+    void sort() override;
+    void move_diag() override;
+    void remove_duplicates() override;
 
-    void spmv(const double* x, double* b) const;
-    void spmv_append(const double* x, double* b) const;
-    void spmv_append_T(const double* x, double* b) const;
-    void spmv_append_neg(const double* x, double* b) const;
-    void spmv_append_neg_T(const double* x, double* b) const;
-    void spmv_residual(const double* x, const double* b, double* r) const; 
+    void spmv(const double* x, double* b) const override;
+    void spmv_append(const double* x, double* b) const override;
+    void spmv_append_T(const double* x, double* b) const override;
+    void spmv_append_neg(const double* x, double* b) const override;
+    void spmv_append_neg_T(const double* x, double* b) const override;
+    void spmv_residual(const double* x, const double* b, double* r) const override;
 
 
-    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) override;
+    CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) override;
 
-    void jacobi(Vector& x, Vector& b, Vector& tmp, double omega = .667);    
+    void jacobi(Vector& x, Vector& b, Vector& tmp, double omega = .667);
 
-    COOMatrix* to_COO();
-    CSRMatrix* to_CSR();
-    CSCMatrix* to_CSC();
-    CSRMatrix* to_BSR();
-    CSCMatrix* to_BSC();
-    COOMatrix* to_BCOO();
+    COOMatrix* to_COO() override;
+    CSRMatrix* to_CSR() override;
+    CSCMatrix* to_CSC() override;
+    CSRMatrix* to_BSR() override;
+    CSCMatrix* to_BSC() override;
+    COOMatrix* to_BCOO() override;
 
-    void block_removal_col_check(bool* col_check);
+    void block_removal_col_check(bool* col_check) override;
 
-    CSCMatrix* copy();
+    CSCMatrix* copy() override;
 
-    format_t format()
+    format_t format() override
     {
         return CSC;
     }
 
-    void add_value(int row, int col, double value)
+    void add_value(int row, int col, double value) override
     {
         if (fabs(value) > zero_tol)
         {
@@ -918,41 +917,37 @@ namespace raptor
             nnz++;
         }
     }
-    void add_value(int row, int col, double* value)
+    void add_value(int row, int col, double* value) override
     {
         idx2.emplace_back(row);
         vals.emplace_back(*value);
         nnz++;
     }
 
-    void* get_data()
+    void* get_data() override
     {
        return vals.data();
     } 
-    int data_size() const
+    int data_size() const override
     {
         return vals.size();
     }
-    void resize_data(int size)
+    void resize_data(int size) override
     {
         vals.resize(size);
     }
-    void reserve_size(int size)
+    void reserve_size(int size) override
     {
         idx2.reserve(size);
         vals.reserve(size);
     }
 
-    double get_val(const int j, const int k)
+    double get_val(const int j, const int k) override
     {
         return vals[j];
     }
 
   };
-
-
-
-
 
 // Forward Declaration of Blocked Classes 
 class BCOOMatrix;
@@ -1003,71 +998,70 @@ class BSRMatrix : public CSRMatrix
         b_size = 1;
     }
 
-    ~BSRMatrix()
+    ~BSRMatrix() override
     {
-        for (std::vector<double*>::iterator it = block_vals.begin();
-                it != block_vals.end(); ++it)
-            delete[] *it;
+        for (auto & block_val : block_vals)
+            delete[] block_val;
     }
 
-    BSRMatrix* transpose();
-    void sort();
-    void remove_duplicates();
-    void move_diag();
+    BSRMatrix* transpose() override;
+    void sort() override;
+    void remove_duplicates() override;
+    void move_diag() override;
 
-    COOMatrix* to_COO();
-    CSRMatrix* to_CSR();
-    CSCMatrix* to_CSC();
-    CSRMatrix* to_BSR();
-    CSCMatrix* to_BSC();
-    COOMatrix* to_BCOO();
+    COOMatrix* to_COO() override;
+    CSRMatrix* to_CSR() override;
+    CSCMatrix* to_CSC() override;
+    CSRMatrix* to_BSR() override;
+    CSCMatrix* to_BSC() override;
+    COOMatrix* to_BCOO() override;
 
-    void block_removal_col_check(bool* col_check);
+    void block_removal_col_check(bool* col_check) override;
 
-    void print();
-    BSRMatrix* copy();
+    void print() override;
+    BSRMatrix* copy() override;
 
-    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) override;
+    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) override;
 
-    void spmv(const double* x, double* b) const;
-    void spmv_append(const double* x, double* b) const;
-    void spmv_append_T(const double* x, double* b) const;
-    void spmv_append_neg(const double* x, double* b) const;
-    void spmv_append_neg_T(const double* x, double* b) const;
-    void spmv_residual(const double* x, const double* b, double* r) const; 
+    void spmv(const double* x, double* b) const override;
+    void spmv_append(const double* x, double* b) const override;
+    void spmv_append_T(const double* x, double* b) const override;
+    void spmv_append_neg(const double* x, double* b) const override;
+    void spmv_append_neg_T(const double* x, double* b) const override;
+    void spmv_residual(const double* x, const double* b, double* r) const override;
 
-    format_t format()
+    format_t format() override
     {
         return BSR;
     }
 
-    void add_value(int row, int col, double* value) 
+    void add_value(int row, int col, double* value)  override
     {
         idx2.emplace_back(col);
         block_vals.emplace_back(copy_val(value));
         nnz++;
     }
 
-    void* get_data()
+    void* get_data() override
     {
        return block_vals.data();
     } 
-    int data_size() const
+    int data_size() const override
     {
         return block_vals.size();
     }
-    void resize_data(int size)
+    void resize_data(int size) override
     {
         block_vals.resize(size);
     }
-    void reserve_size(int size)
+    void reserve_size(int size) override
     {
         idx2.reserve(size);
         block_vals.reserve(size);
     }
 
-    double get_val(const int j, const int k)
+    double get_val(const int j, const int k) override
     {
         return block_vals[j][k];
     }
@@ -1118,40 +1112,39 @@ class BCOOMatrix : public COOMatrix
         b_size = 1;
     }
 
-    ~BCOOMatrix()
+    ~BCOOMatrix() override
     {
-        for (std::vector<double*>::iterator it = block_vals.begin();
-                it != block_vals.end(); ++it)
-            delete[] *it;
+        for (auto & block_val : block_vals)
+            delete[] block_val;
     }
 
-    BCOOMatrix* transpose();
-    void sort();
-    void remove_duplicates();
-    void move_diag();
+    BCOOMatrix* transpose() override;
+    void sort() override;
+    void remove_duplicates() override;
+    void move_diag() override;
 
-    void print();
-    BCOOMatrix* copy();
-    COOMatrix* to_COO();
-    CSRMatrix* to_CSR();
-    CSCMatrix* to_CSC();
-    CSRMatrix* to_BSR();
-    CSCMatrix* to_BSC();
-    COOMatrix* to_BCOO();
+    void print() override;
+    BCOOMatrix* copy() override;
+    COOMatrix* to_COO() override;
+    CSRMatrix* to_CSR() override;
+    CSCMatrix* to_CSC() override;
+    CSRMatrix* to_BSR() override;
+    CSCMatrix* to_BSC() override;
+    COOMatrix* to_BCOO() override;
 
-    void block_removal_col_check(bool* col_check);
+    void block_removal_col_check(bool* col_check) override;
 
-    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) override;
+    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) override;
 
-    void spmv(const double* x, double* b) const;
-    void spmv_append(const double* x, double* b) const;
-    void spmv_append_T(const double* x, double* b) const;
-    void spmv_append_neg(const double* x, double* b) const;
-    void spmv_append_neg_T(const double* x, double* b) const;
-    void spmv_residual(const double* x, const double* b, double* r) const; 
+    void spmv(const double* x, double* b) const override;
+    void spmv_append(const double* x, double* b) const override;
+    void spmv_append_T(const double* x, double* b) const override;
+    void spmv_append_neg(const double* x, double* b) const override;
+    void spmv_append_neg_T(const double* x, double* b) const override;
+    void spmv_residual(const double* x, const double* b, double* r) const override;
 
-    void add_value(int row, int col, double* values)
+    void add_value(int row, int col, double* values) override
     {
         idx1.emplace_back(row);
         idx2.emplace_back(col);
@@ -1159,31 +1152,31 @@ class BCOOMatrix : public COOMatrix
         nnz++;
     }
 
-    format_t format()
+    format_t format() override
     {
         return BCOO;
     }
 
-    void* get_data()
+    void* get_data() override
     {
        return block_vals.data();
     } 
-    int data_size() const
+    int data_size() const override
     {
         return block_vals.size();
     }
-    void resize_data(int size)
+    void resize_data(int size) override
     {
         block_vals.resize(size);
     }
-    void reserve_size(int size)
+    void reserve_size(int size) override
     {
         idx1.reserve(size);
         idx2.reserve(size);
         block_vals.reserve(size);
     }
 
-    double get_val(const int j, const int k)
+    double get_val(const int j, const int k) override
     {
         return block_vals[j][k];
     }
@@ -1243,64 +1236,64 @@ class BSCMatrix : public CSCMatrix
             delete[] *it;
     }
 
-    BSCMatrix* transpose();
-    void sort();
-    void remove_duplicates();
-    void move_diag();
+    BSCMatrix* transpose() override;
+    void sort() override;
+    void remove_duplicates() override;
+    void move_diag() override;
 
-    COOMatrix* to_COO();
-    CSRMatrix* to_CSR();
-    CSCMatrix* to_CSC();
-    CSRMatrix* to_BSR();
-    CSCMatrix* to_BSC();
-    COOMatrix* to_BCOO();
+    COOMatrix* to_COO() override;
+    CSRMatrix* to_CSR() override;
+    CSCMatrix* to_CSC() override;
+    CSRMatrix* to_BSR() override;
+    CSCMatrix* to_BSC() override;
+    COOMatrix* to_BCOO() override;
     
-    void block_removal_col_check(bool* col_check);
+    void block_removal_col_check(bool* col_check) override;
 
-    void print();
-    BSCMatrix* copy();
+    void print() override;
+    BSCMatrix* copy() override;
 
-    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = NULL);
-    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = NULL);
+    BSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) override;
+    BSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr) override;
 
-    void spmv(const double* x, double* b) const;
-    void spmv_append(const double* x, double* b) const;
-    void spmv_append_T(const double* x, double* b) const;
-    void spmv_append_neg(const double* x, double* b) const;
-    void spmv_append_neg_T(const double* x, double* b) const;
-    void spmv_residual(const double* x, const double* b, double* r) const; 
+    void spmv(const double* x, double* b) const override;
+    void spmv_append(const double* x, double* b) const override;
+    void spmv_append_T(const double* x, double* b) const override;
+    void spmv_append_neg(const double* x, double* b) const override;
+    void spmv_append_neg_T(const double* x, double* b) const override;
+    void spmv_residual(const double* x, const double* b, double* r) const override;
 
-    format_t format()
+    format_t format() override
     {
         return BSC;
     }
 
-    void add_value(int row, int col, double* value)
+    void add_value(int row, int col, double* value) override
     {
         idx2.emplace_back(row);
         block_vals.emplace_back(copy_val(value));
         nnz++;
     }
 
-    void* get_data()
+    void* get_data() override
     {
        return block_vals.data();
     }
-    void resize_data(int size)
+    void resize_data(int size) override
     {
         block_vals.resize(size);
     }
-    int data_size() const
+    int data_size() const override
     {
         return block_vals.size();
     }
-    void reserve_size(int size)
+    void reserve_size(int size) override
     {
         idx2.reserve(size);
         block_vals.reserve(size);
     }
 
-    double get_val(const int j, const int k)
+    double get_val(const int j, const int k) override
     {
         return block_vals[j][k];
     }
@@ -1311,6 +1304,4 @@ class BSCMatrix : public CSCMatrix
 
 
 }
-
-#endif
 

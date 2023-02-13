@@ -1,10 +1,9 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef PARMATRIX_HPP
-#define PARMATRIX_HPP
+#pragma once
 
 #include <mpi.h>
-#include <math.h>
+#include <cmath>
 #include <set>
 
 #include "matrix.hpp"
@@ -78,7 +77,7 @@ namespace raptor
   class ParMatrix
   {
   public:
-    ParMatrix(Partition* part)
+    explicit ParMatrix(Partition* part)
     {
         partition = part;
         partition->num_shared++;
@@ -88,11 +87,11 @@ namespace raptor
         on_proc_num_cols = partition->local_num_cols;
         local_num_rows = partition->local_num_rows;
 
-        comm = NULL;
-        tap_comm = NULL;
-        tap_mat_comm = NULL;
-        on_proc = NULL;
-        off_proc = NULL;
+        comm = nullptr;
+        tap_comm = nullptr;
+        tap_mat_comm = nullptr;
+        on_proc = nullptr;
+        off_proc = nullptr;
     }
 
     ParMatrix(Partition* part, index_t glob_rows, index_t glob_cols, int local_rows, 
@@ -106,11 +105,11 @@ namespace raptor
         on_proc_num_cols = on_proc_cols;
         local_num_rows = local_rows;
 
-        comm = NULL;
-        tap_comm = NULL;
-        tap_mat_comm = NULL;
-        on_proc = NULL;
-        off_proc = NULL;
+        comm = nullptr;
+        tap_comm = nullptr;
+        tap_mat_comm = nullptr;
+        on_proc = nullptr;
+        off_proc = nullptr;
     }
 
     ParMatrix(index_t glob_rows, index_t glob_cols)
@@ -122,11 +121,11 @@ namespace raptor
         on_proc_num_cols = partition->local_num_cols;
         local_num_rows = partition->local_num_rows;
 
-        comm = NULL;
-        tap_comm = NULL;
-        tap_mat_comm = NULL;
-        on_proc = NULL;
-        off_proc = NULL;
+        comm = nullptr;
+        tap_comm = nullptr;
+        tap_mat_comm = nullptr;
+        on_proc = nullptr;
+        off_proc = nullptr;
     }
 
     ParMatrix(index_t glob_rows, 
@@ -135,7 +134,7 @@ namespace raptor
             int local_cols, 
             index_t first_row, 
             index_t first_col, 
-            Topology* topology = NULL)
+            Topology* topology = nullptr)
     {
         partition = new Partition(glob_rows, glob_cols,
                 local_rows, local_cols, first_row, first_col, topology);
@@ -145,11 +144,11 @@ namespace raptor
         on_proc_num_cols = partition->local_num_cols;
         local_num_rows = partition->local_num_rows;
 
-        comm = NULL;
-        tap_comm = NULL;
-        tap_mat_comm = NULL;
-        on_proc = NULL;
-        off_proc = NULL;
+        comm = nullptr;
+        tap_comm = nullptr;
+        tap_mat_comm = nullptr;
+        on_proc = nullptr;
+        off_proc = nullptr;
     }
        
     ParMatrix()
@@ -160,14 +159,14 @@ namespace raptor
         off_proc_num_cols = 0;
         on_proc_num_cols = 0;
 
-        comm = NULL;
-        tap_comm = NULL;
-        tap_mat_comm = NULL;
+        comm = nullptr;
+        tap_comm = nullptr;
+        tap_mat_comm = nullptr;
 
-        on_proc = NULL;
-        off_proc = NULL;
+        on_proc = nullptr;
+        off_proc = nullptr;
 
-        partition = NULL;
+        partition = nullptr;
     }
 
     virtual ~ParMatrix()
@@ -260,7 +259,7 @@ namespace raptor
     void init_tap_communicators(RAPtor_MPI_Comm comm = RAPtor_MPI_COMM_WORLD);
     void update_tap_comm(ParMatrix* old, const std::vector<int>& old_to_new)
     {
-        tap_comm = new TAPComm((TAPComm*) old->tap_comm, old_to_new, NULL);
+        tap_comm = new TAPComm((TAPComm*) old->tap_comm, old_to_new, nullptr);
         tap_mat_comm = new TAPComm((TAPComm*) old->tap_mat_comm, old_to_new, 
                 tap_comm->local_L_par_comm);
     }
@@ -268,7 +267,7 @@ namespace raptor
             const std::vector<int>& off_old_to_new)
     {
         tap_comm = new TAPComm((TAPComm*) old->tap_comm, on_old_to_new, off_old_to_new, 
-                NULL);
+                nullptr);
         tap_mat_comm = new TAPComm((TAPComm*) old->tap_mat_comm, on_old_to_new, 
                 off_old_to_new, tap_comm->local_L_par_comm);
     }
@@ -345,7 +344,7 @@ namespace raptor
   class ParCOOMatrix : public ParMatrix
   {
   public:
-    ParCOOMatrix(bool form_mat = true) : ParMatrix()
+    explicit ParCOOMatrix(bool form_mat = true) : ParMatrix()
     {
         if (form_mat)
         {
@@ -383,7 +382,7 @@ namespace raptor
         }
     }
     
-    ParCOOMatrix(Partition* part, 
+    explicit ParCOOMatrix(Partition* part, 
             int nnz_per_row = 5, bool form_mat = true) : ParMatrix(part)
     {
         if (form_mat)
@@ -395,29 +394,29 @@ namespace raptor
         }
     }
 
-    ParCOOMatrix* to_ParCOO();
-    ParCSRMatrix* to_ParCSR();
-    ParCSCMatrix* to_ParCSC();
-    ParCOOMatrix* to_ParBCOO();
-    ParCSRMatrix* to_ParBSR();
-    ParCSCMatrix* to_ParBSC();
+    ParCOOMatrix* to_ParCOO() override;
+    ParCSRMatrix* to_ParCSR() override;
+    ParCSCMatrix* to_ParCSC() override;
+    ParCOOMatrix* to_ParBCOO() override;
+    ParCSRMatrix* to_ParBSR() override;
+    ParCSCMatrix* to_ParBSC() override;
 
-    ParCOOMatrix* copy()
+    ParCOOMatrix* copy() override
     {
         ParCOOMatrix* A = new ParCOOMatrix();
         A->copy_helper(this);
         return A;
     }
-    void copy_helper(ParCSRMatrix* A);
-    void copy_helper(ParCSCMatrix* A);
-    void copy_helper(ParCOOMatrix* A);
+    void copy_helper(ParCSRMatrix* A) override;
+    void copy_helper(ParCSCMatrix* A) override;
+    void copy_helper(ParCOOMatrix* A) override;
 
     void mult(ParVector& x, ParVector& b, bool tap = false);
     void tap_mult(ParVector& x, ParVector& b);
     void mult_T(ParVector& x, ParVector& b, bool tap = false);
     void tap_mult_T(ParVector& x, ParVector& b);
 
-    ParCOOMatrix* transpose();
+    ParCOOMatrix* transpose() override;
   };
 
 
@@ -503,7 +502,7 @@ namespace raptor
     }
 
     ParCSRMatrix(index_t glob_rows, index_t glob_cols, int local_rows, 
-            int local_cols, index_t first_row, index_t first_col, Topology* topology = NULL,  
+            int local_cols, index_t first_row, index_t first_col, Topology* topology = nullptr,  
             int nnz = 0, bool form_mat = true) : ParMatrix(glob_rows, glob_cols,
                 local_rows, local_cols, first_row, first_col, topology)
     {
@@ -575,7 +574,7 @@ namespace raptor
     void copy_helper(ParCOOMatrix* A);
 
     ParCSRMatrix* strength(strength_t strength_type, double theta = 0.0, 
-            bool tap_amg = false, int num_variables = 1, int* variables = NULL);
+            bool tap_amg = false, int num_variables = 1, int* variables = nullptr);
     ParCSRMatrix* aggregate();
     ParCSRMatrix* fit_candidates(double* B, double* R, int num_candidates, 
             double tol = 1e-10);
@@ -634,7 +633,7 @@ namespace raptor
             int local_block_rows, int local_block_cols, 
             int first_block_row, int first_block_col,
             int block_row_size, int block_col_size,
-            Topology* topology = NULL, int nnz = 0)
+            Topology* topology = nullptr, int nnz = 0)
         : ParCSRMatrix(global_block_rows, global_block_cols,
                 local_block_rows, local_block_cols, 
                 first_block_row, first_block_col, topology,
@@ -680,16 +679,16 @@ namespace raptor
                 block_row_size, block_col_size, nnz);
     }
 
-    ParCOOMatrix* to_ParCOO();
-    ParCSRMatrix* to_ParCSR();
-    ParCSCMatrix* to_ParCSC();
-    ParCOOMatrix* to_ParBCOO();
-    ParCSRMatrix* to_ParBSR();
-    ParCSCMatrix* to_ParBSC();
+    ParCOOMatrix* to_ParCOO() override;
+    ParCSRMatrix* to_ParCSR() override;
+    ParCSCMatrix* to_ParCSC() override;
+    ParCOOMatrix* to_ParBCOO() override;
+    ParCSRMatrix* to_ParBSR() override;
+    ParCSCMatrix* to_ParBSC() override;
 
-    ParBSRMatrix* copy()
+    ParBSRMatrix* copy() override
     {
-        ParBSRMatrix* A = new ParBSRMatrix();
+        auto* A = new ParBSRMatrix();
         A->copy_helper(this);
         return A;
     }
@@ -701,7 +700,7 @@ namespace raptor
   class ParCSCMatrix : public ParMatrix
   {
   public:
-    ParCSCMatrix(bool form_mat = true) : ParMatrix()
+    explicit ParCSCMatrix(bool form_mat = true) : ParMatrix()
     {
         if (form_mat)
         {
@@ -762,30 +761,30 @@ namespace raptor
         }
     }
 
-    ParCOOMatrix* to_ParCOO();
-    ParCSRMatrix* to_ParCSR();
-    ParCSCMatrix* to_ParCSC();
-    ParCOOMatrix* to_ParBCOO();
-    ParCSRMatrix* to_ParBSR();
-    ParCSCMatrix* to_ParBSC();
+    ParCOOMatrix* to_ParCOO() override;
+    ParCSRMatrix* to_ParCSR() override;
+    ParCSCMatrix* to_ParCSC() override;
+    ParCOOMatrix* to_ParBCOO() override;
+    ParCSRMatrix* to_ParBSR() override;
+    ParCSCMatrix* to_ParBSC() override;
 
-    ParCSCMatrix* copy()
+    ParCSCMatrix* copy() override
     {
-        ParCSCMatrix* A = new ParCSCMatrix();
+        auto* A = new ParCSCMatrix();
         A->copy_helper(this);
         return A;
     }
 
-    void copy_helper(ParCSRMatrix* A);
-    void copy_helper(ParCSCMatrix* A);
-    void copy_helper(ParCOOMatrix* A);
+    void copy_helper(ParCSRMatrix* A) override;
+    void copy_helper(ParCSCMatrix* A) override;
+    void copy_helper(ParCOOMatrix* A) override;
 
     void mult(ParVector& x, ParVector& b, bool tap);
     void tap_mult(ParVector& x, ParVector& b);
     void mult_T(ParVector& x, ParVector& b, bool tap);
     void tap_mult_T(ParVector& x, ParVector& b);
 
-    ParCSCMatrix* transpose();
+    ParCSCMatrix* transpose() override;
   };
 
 
@@ -831,16 +830,16 @@ class ParBSCMatrix : public ParCSCMatrix
                 block_row_size, block_col_size, nnz);
     }
 
-    ParCOOMatrix* to_ParCOO();
-    ParCSRMatrix* to_ParCSR();
-    ParCSCMatrix* to_ParCSC();
-    ParCOOMatrix* to_ParBCOO();
-    ParCSRMatrix* to_ParBSR();
-    ParCSCMatrix* to_ParBSC();
+    ParCOOMatrix* to_ParCOO() override;
+    ParCSRMatrix* to_ParCSR() override;
+    ParCSCMatrix* to_ParCSC() override;
+    ParCOOMatrix* to_ParBCOO() override;
+    ParCSCMatrix* to_ParBSC() override;
+    ParCSRMatrix* to_ParBSR() override;
 
-    ParBSCMatrix* copy()
+    ParBSCMatrix* copy() override
     {
-        ParBSCMatrix* A = new ParBSCMatrix();
+        auto* A = new ParBSCMatrix();
         A->copy_helper(this);
         return A;
     }
@@ -849,4 +848,3 @@ class ParBSCMatrix : public ParCSCMatrix
 
 
 }
-#endif

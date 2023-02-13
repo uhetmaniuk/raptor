@@ -1,7 +1,7 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_ML_MULTILEVEL_H
-#define RAPTOR_ML_MULTILEVEL_H
+#pragma once
+
 
 #include "core/types.hpp"
 #include "core/matrix.hpp"
@@ -191,7 +191,7 @@ namespace raptor
                 }
             }
 
-            int solve(Vector& sol, Vector& rhs, int num_iterations = 100)
+            int solve(Vector& sol, Vector& rhs)
             {
                 double b_norm = rhs.norm(2);
                 double r_norm;
@@ -199,7 +199,7 @@ namespace raptor
 
                 if (store_residuals)
                 {
-                    residuals.resize(num_iterations + 1);
+                    residuals.resize(max_iterations + 1);
                 }
 
                 // Iterate until convergence or max iterations
@@ -220,7 +220,7 @@ namespace raptor
                     residuals[iter] = r_norm;
                 }
 
-                while (r_norm > 1e-07 && iter < num_iterations)
+                while (r_norm > solve_tol && iter < max_iterations)
                 {
                     cycle(sol, rhs, 0);
 
@@ -247,15 +247,38 @@ namespace raptor
                 return residuals;
             }
 
+            void print_hierarchy()
+            {
+                printf("Num Levels = %d\n", num_levels);
+                printf("A\tNRow\tNCol\tNNZ\n");
+
+                for (int i = 0; i < num_levels; i++)
+                {
+                    CSRMatrix* Al = levels[i]->A;
+                    printf("%d\t%d\t%d\t%lu\n", i, Al->n_rows, Al->n_cols, size_t(Al->nnz));
+                }
+            }
+
+            void print_residuals(int iter)
+            {
+                for (int i = 0; i < iter + 1; i++)
+                {
+                    printf("Res[%d] = %e\n", i, residuals[i]);
+                }
+            }
+
             relax_t relax_type;
             strength_t strength_type;
 
             int num_smooth_sweeps;
             int max_coarse;
             int max_levels;
+            int max_iterations;
 
             double strong_threshold;
             double relax_weight;
+            double sparsify_tol;
+            double solve_tol;
 
             bool store_residuals;
 
@@ -270,4 +293,3 @@ namespace raptor
 
     };
 }
-#endif

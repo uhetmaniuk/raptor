@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_SMOOTHED_AGGREGATION_SOLVER_HPP
-#define RAPTOR_SMOOTHED_AGGREGATION_SOLVER_HPP
+#pragma once
 
 #include "multilevel/multilevel.hpp"
 #include "aggregation/mis.hpp"
@@ -14,7 +13,8 @@ namespace raptor
     class SmoothedAggregationSolver : public Multilevel
     {
       public:
-        SmoothedAggregationSolver(double _strong_threshold = 0.0, agg_t _agg_type = MIS, 
+
+        explicit SmoothedAggregationSolver(double _strong_threshold = 0.0, agg_t _agg_type = MIS,
                 prolong_t _prolong_type = JacobiProlongation,
                 strength_t _strength_type = Symmetric,
                 relax_t _relax_type = SOR) 
@@ -28,12 +28,9 @@ namespace raptor
             prolong_weight = 4.0/3;
         }
 
-        ~SmoothedAggregationSolver()
-        {
+        ~SmoothedAggregationSolver() override = default;
 
-        }
-
-        void setup(CSRMatrix* Af) 
+        void setup(CSRMatrix* Af) override
         {
             // TODO -- add option for B to be passed as variable
             num_candidates = 1;
@@ -42,16 +39,15 @@ namespace raptor
             {
                 B[i] = 1.0;
             }
-
             setup_helper(Af);
         }
 
-        void extend_hierarchy()
+        void extend_hierarchy() override
         {
             int level_ctr = levels.size() - 1;
             CSRMatrix* A = levels[level_ctr]->A;
             CSRMatrix* S;
-            CSRMatrix* P = NULL;
+            CSRMatrix* P = nullptr;
             CSRMatrix* AP;
             CSRMatrix* T;
             CSCMatrix* P_csc;
@@ -102,7 +98,7 @@ namespace raptor
             levels[level_ctr]->x.resize(A->n_rows);
             levels[level_ctr]->b.resize(A->n_rows);
             levels[level_ctr]->tmp.resize(A->n_rows);
-            levels[level_ctr]->P = NULL;
+            levels[level_ctr]->P = nullptr;
 
             std::copy(R.begin(), R.end(), B.begin());
 
@@ -124,8 +120,5 @@ namespace raptor
 
     };
 }
-   
-
-#endif
 
 

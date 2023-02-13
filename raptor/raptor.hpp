@@ -91,9 +91,11 @@
 
 // Krylov methods
 #include "krylov/cg.hpp"
-#include "krylov/par_cg.hpp"
 #include "krylov/bicgstab.hpp"
-#include "krylov/par_bicgstab.hpp"
+#ifndef NO_MPI
+    #include "krylov/par_cg.hpp"
+    #include "krylov/par_bicgstab.hpp"
+#endif
 
 // Relaxation methods
 #include "util/linalg/relax.hpp"

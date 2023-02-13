@@ -1131,7 +1131,7 @@ CSCMatrix* COOMatrix::to_BSC()
 }
 CSCMatrix* BCOOMatrix::to_CSC()
 {
-    return this->to_CSC();
+    return this->to_BSC();
 }
 CSCMatrix* BCOOMatrix::to_BSC()
 {
@@ -1159,7 +1159,7 @@ COOMatrix* BSRMatrix::to_COO()
 }
 COOMatrix* BSRMatrix::to_BCOO()
 {
-    BCOOMatrix* A = new BCOOMatrix();
+    auto* A = new BCOOMatrix();
     A->b_rows = b_rows;
     A->b_cols = b_cols;
     A->b_size = b_size;

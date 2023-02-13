@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_PAR_SMOOTHED_AGGREGATION_SOLVER_HPP
-#define RAPTOR_PAR_SMOOTHED_AGGREGATION_SOLVER_HPP
+#pragma once
 
 #include "multilevel/par_multilevel.hpp"
 #include "aggregation/par_mis.hpp"
@@ -14,7 +13,7 @@ namespace raptor
     class ParSmoothedAggregationSolver : public ParMultilevel
     {
       public:
-        ParSmoothedAggregationSolver(double _strong_threshold = 0.0, 
+        explicit ParSmoothedAggregationSolver(double _strong_threshold = 0.0,
                 agg_t _agg_type = MIS, 
                 prolong_t _prolong_type = JacobiProlongation,
                 strength_t _strength_type = Symmetric,
@@ -31,11 +30,9 @@ namespace raptor
             prolong_weight = _prolong_weight;
         }
 
-        ~ParSmoothedAggregationSolver()
-        {
-        }
+        ~ParSmoothedAggregationSolver() override = default;
 
-        void setup(ParCSRMatrix* Af) 
+        void setup(ParCSRMatrix* Af) override
         {
             // TODO -- add option for B to be passed as variable
             num_candidates = 1;
@@ -48,7 +45,7 @@ namespace raptor
             setup_helper(Af);
         }
 
-        void extend_hierarchy()
+        void extend_hierarchy() override
         {
             int level_ctr = levels.size() - 1;
             bool tap_level = tap_amg >= 0 && tap_amg <= level_ctr;
@@ -56,7 +53,7 @@ namespace raptor
             ParCSRMatrix* A = levels[level_ctr]->A;
             ParCSRMatrix* S;
             ParCSRMatrix* T;
-            ParCSRMatrix* P = NULL;
+            ParCSRMatrix* P = nullptr;
             ParCSRMatrix* AP;
 
             std::vector<int> states;
@@ -67,7 +64,7 @@ namespace raptor
 
             // Form strength of connection
             S = A->strength(strength_type, strong_threshold, tap_level, 
-                    1, NULL);
+                    1, nullptr);
 
             // Aggregate Nodes
             switch (agg_type)
@@ -117,7 +114,7 @@ namespace raptor
             levels[level_ctr]->x.resize(A->global_num_rows, A->local_num_rows);
             levels[level_ctr]->b.resize(A->global_num_rows, A->local_num_rows);
             levels[level_ctr]->tmp.resize(A->global_num_rows, A->local_num_rows);
-            levels[level_ctr]->P = NULL;
+            levels[level_ctr]->P = nullptr;
 
             if (tap_amg >= 0 && tap_amg <= level_ctr)
             {
@@ -149,10 +146,6 @@ namespace raptor
 
     };
 }
-   
-
-#endif
-
 
 
 

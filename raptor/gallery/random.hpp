@@ -4,7 +4,10 @@
 #ifndef RAPTOR_GALLERY_RANDOM_HPP
 #define RAPTOR_GALLERY_RANDOM_HPP
 
+#ifndef NO_MPI
 #include <mpi.h>
+#endif
+
 #include <float.h>
 #include <cmath>
 #include <stdlib.h>

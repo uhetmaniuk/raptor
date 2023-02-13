@@ -45,6 +45,8 @@ if (WITH_MPI)
     find_package(MPI REQUIRED)
     include_directories(${MPI_INCLUDE_PATH})
     SET(MPIRUN mpirun)
+else()
+    add_definitions ( -DNO_MPI )
 endif (WITH_MPI)
 
 include_directories("external")

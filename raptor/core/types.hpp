@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_TYPES_HPP_
-#define RAPTOR_CORE_TYPES_HPP_
+#pragma once
 
 #include <float.h>
 #include <math.h>
@@ -23,7 +22,7 @@
 
 using namespace std;
 
-#define zero_tol 1e-16
+#define zero_tol 1.0e-16
 #define RAPtor_MPI_INDEX_T MPI_INT
 #define RAPtor_MPI_DATA_T MPI_DOUBLE
 
@@ -35,7 +34,6 @@ using namespace std;
 #define Unselected 0
 #define Unassigned -1
 #define NoNeighbors -2
-
 
 // Global Timing Variables
 struct PairData 
@@ -65,15 +63,6 @@ namespace raptor
     template<typename T, typename U>
     U max_func(const U& a, const T&b)
     {
-        if (a > b)
-        {
-            return a;
-        }
-        else
-        {
-            return b;
-        }
+        return (a > b) ? a : b;
     }
 }
-
-#endif

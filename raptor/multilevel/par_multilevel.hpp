@@ -403,11 +403,9 @@ namespace raptor
                             break;
                     }
 
-
                     A->residual(x, b, tmp, tap_level);
 
                     P->mult_T(tmp, levels[level+1]->b, tap_level);
-
 
                     if (solve_times)
                     {
@@ -423,7 +421,6 @@ namespace raptor
                     {
                         init_profile();
                     }
-
 
                     P->mult_append(levels[level+1]->x, x, tap_level);
 
