@@ -194,7 +194,7 @@ namespace raptor
 
     double* copy_val(const double* val) const
     {
-        double* new_val = new double[b_size];
+        auto* new_val = new double[b_size];
         for (int i = 0; i < b_size; i++)
         {
             new_val[i] = val[i];
@@ -220,7 +220,7 @@ namespace raptor
 
     // Methods for appending two values
     // (either single or block values)
-    void append_vals(double* val, const double* addl_val) const
+    static void append_vals(double* val, const double* addl_val)
     {
         *val += *addl_val;
     }
@@ -237,7 +237,7 @@ namespace raptor
     {
         *sum += (val * addl_val);
     }
-    static void mult_vals(double* val, double* addl_val, double** sum,
+    static void mult_vals(const double* val, const double* addl_val, double** sum,
             int nr, int nc, int n_inner)
     {
         for (int i = 0; i < nr; i++) // Go through b_rows of A
@@ -258,7 +258,7 @@ namespace raptor
     {
         *sum += (val * addl_val);
     }
-    static void mult_T_vals(double* val, double* addl_val, double** sum,
+    static void mult_T_vals(const double* val, const double* addl_val, double** sum,
             int nr, int nc, int n_inner)
     {
         for (int i = 0; i < nr; i++) // Go through b_rows of A
@@ -514,7 +514,7 @@ namespace raptor
         }
     }
 
-    COOMatrix* transpose();
+    COOMatrix* transpose() override;
 
     void print();
 
@@ -662,7 +662,7 @@ namespace raptor
 
     CSRMatrix() = default;
 
-    ~CSRMatrix() = default;
+    ~CSRMatrix() override = default;
 
     template <typename T>
     void init_from_dense(T* _data)

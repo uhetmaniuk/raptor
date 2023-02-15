@@ -2,7 +2,10 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "krylov/bicgstab.hpp"
 
-using namespace raptor;
+#include "core/matrix.hpp"
+#include "core/vector.hpp"
+
+namespace raptor {
 
 void BiCGStab(CSRMatrix *A, Vector &x, Vector &b, std::vector<double> &res, double tol, int max_iter) {
     Vector r;
@@ -104,6 +107,8 @@ void BiCGStab(CSRMatrix *A, Vector &x, Vector &b, std::vector<double> &res, doub
 
         iter++;
     }
+}
+
 }
 
 

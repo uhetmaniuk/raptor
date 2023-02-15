@@ -1,5 +1,4 @@
 #include <cmath>
-#include <cstdlib>
 #include <cstdio>
 #include <mpi.h>
 

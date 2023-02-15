@@ -1,22 +1,16 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_UTILS_LINALG_DIAG_SCALE_H
-#define RAPTOR_UTILS_LINALG_DIAG_SCALE_H
+#pragma once
 
-#include <mpi.h>
-#include <float.h>
+#include <vector>
 
-#include "core/par_vector.hpp"
-#include "core/par_matrix.hpp"
+namespace raptor {
 
-using namespace raptor;
+    class ParCSRMatrix;
+    class ParVector;
 
-void row_scale(ParCSRMatrix* A, ParVector& rhs);
-void diagonally_scale(ParCSRMatrix* A, ParVector& rhs, std::vector<double>& row_scales);
-void diagonally_unscale(ParVector& sol, const std::vector<double>& row_scales);
+    void row_scale(ParCSRMatrix* A, ParVector& rhs);
+    void diagonally_scale(ParCSRMatrix* A, ParVector& rhs, std::vector<double>& row_scales);
+    void diagonally_unscale(ParVector& sol, const std::vector<double>& row_scales);
 
-
-
-
-#endif
-
+}

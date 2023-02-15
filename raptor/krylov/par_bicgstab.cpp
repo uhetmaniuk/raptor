@@ -1,9 +1,14 @@
 // Copyright (c) 2015, Raptor Developer Team, University of Illinois at Urbana-Champaign
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "krylov/par_bicgstab.hpp"
-#include "krylov/partial_inner.hpp"
 
-using namespace raptor;
+#include "core/mpi_types.hpp"
+#include "krylov/partial_inner.hpp"
+#include "core/par_matrix.hpp"
+#include "core/par_vector.hpp"
+#include "multilevel/par_multilevel.hpp"
+
+namespace raptor {
 
 /**************************************************************************************
  BiCGStab 
@@ -231,7 +236,6 @@ void SeqInner_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<
         }
     }
 
-    return;
 }
 
 /**************************************************************************************
@@ -366,7 +370,6 @@ void Pre_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, ParMultilevel *ml
         }
     }
 
-    return;
 }
 
 void SeqNorm_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<double>& res, double tol, int max_iter)
@@ -475,7 +478,6 @@ void SeqNorm_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<d
         }
     }
 
-    return;
 }
 
 void SeqInnerSeqNorm_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<double>& res, double tol, int max_iter)
@@ -584,7 +586,6 @@ void SeqInnerSeqNorm_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::
         }
     }
 
-    return;
 }
 
 /**************************************************************************************
@@ -729,7 +730,6 @@ void PI_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<double
         }
     }
 
-    return;
 }
 
 /**************************************************************************************
@@ -890,5 +890,7 @@ void PrePI_BiCGStab(ParCSRMatrix* A, ParVector& x, ParVector& b, std::vector<dou
         }
     }
 */
-    return;
 }
+
+}
+

@@ -2,12 +2,11 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
-#define WITH_RAPtor_MPI 1
-
 #include <mpi.h>
-#include "mpi_types.hpp"
-#include "vector.hpp"
+#include <vector>
+
 #include "matrix.hpp"
+#include "mpi_types.hpp"
 #include "utilities.hpp"
 
 /**************************************************************
@@ -34,7 +33,7 @@ public:
         indptr.emplace_back(0);
     }
 
-    CommData(CommData* data)
+    explicit CommData(CommData* data)
     {
         num_msgs = data->num_msgs;
         size_msgs = data->size_msgs;
@@ -60,11 +59,9 @@ public:
     **************************************************************
     ***** 
     **************************************************************/
-    virtual ~CommData()
-    {
-    };
+    virtual ~CommData() = default;
 
-    virtual void add_msg(int proc, int msg_size, int* msg_indices = NULL) = 0;
+    virtual void add_msg(int proc, int msg_size, int* msg_indices = nullptr) = 0;
 
     void finalize()
     {
@@ -89,7 +86,7 @@ public:
 
 
     template <typename T>
-    std::vector<T>& get_buffer(const int block_size = 1);
+    std::vector<T>& get_buffer(int block_size = 1);
 
     template <typename T>
     void send(const T* values, int key, RAPtor_MPI_Comm mpi_comm, const int block_size = 1,
@@ -135,7 +132,6 @@ public:
     void recv(int key, RAPtor_MPI_Comm mpi_comm, const int block_size = 1)
     {
         if (num_msgs == 0) return;
-
         int proc, start, end;
         int size = size_msgs * block_size;
         RAPtor_MPI_Datatype datatype = get_type<T>();
@@ -301,18 +297,11 @@ public:
 class ContigData : public CommData
 {
 public:
-    ContigData() : CommData()
-    {
-    }
+    ContigData() : CommData() {}
 
-    ContigData(ContigData* data) : CommData(data)
-    {
+    explicit ContigData(ContigData* data) : CommData(data) {}
 
-    }
-
-    ~ContigData()
-    {
-    }
+    ~ContigData() override = default;
 
     ContigData* copy()
     {
@@ -354,7 +343,7 @@ public:
         return data;
     }
 
-    void add_msg(int proc, int msg_size, int* msg_indices = NULL)
+    void add_msg(int proc, int msg_size, int* msg_indices = nullptr)
     {
         int last_ptr = indptr[num_msgs];
         procs.emplace_back(proc);
@@ -664,19 +653,15 @@ public:
 class NonContigData : public CommData
 {
 public:
-    NonContigData() : CommData()
-    {
-    }
+    NonContigData() : CommData() {}
 
-    NonContigData(NonContigData* data) : CommData(data)
+    explicit NonContigData(NonContigData* data) : CommData(data)
     {
         std::copy(data->indices.begin(), data->indices.end(),
                 std::back_inserter(indices));
     }
 
-    ~NonContigData()
-    {
-    }
+    ~NonContigData() override = default;
 
     NonContigData* copy()
     {
@@ -1067,15 +1052,13 @@ public:
     {
     }
 
-    DuplicateData(DuplicateData* data) : NonContigData(data)
+    explicit DuplicateData(DuplicateData* data) : NonContigData(data)
     {
         std::copy(data->indptr_T.begin(), data->indptr_T.end(),
                 std::back_inserter(indptr_T));
     }
 
-    ~DuplicateData()
-    {
-    }
+    ~DuplicateData() override = default;
 
     DuplicateData* copy()
     {

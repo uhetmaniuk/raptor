@@ -4,6 +4,9 @@
 
 #include <cmath>
 
+#include "core/mpi_types.hpp"
+#include "core/par_vector.hpp"
+
 namespace raptor {
 
 /********************************************************************** 

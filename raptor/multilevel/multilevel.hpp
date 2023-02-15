@@ -2,7 +2,6 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #pragma once
 
-
 #include "core/types.hpp"
 #include "core/matrix.hpp"
 #include "core/vector.hpp"

@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_HPP
-#define RAPTOR_HPP
+#pragma once
 
 // Define types such as int and double sizes
 #include "core/types.hpp"
@@ -118,7 +117,3 @@
 #ifndef NO_MPI
     #include "util/linalg/par_diag_scale.hpp"
 #endif
-
-
-#endif
-

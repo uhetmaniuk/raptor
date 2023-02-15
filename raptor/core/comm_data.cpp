@@ -6,17 +6,17 @@
 namespace raptor 
 {
 template<>
-std::vector<double>& CommData::get_buffer<double>(const int block_size)
+std::vector<double>& CommData::get_buffer<double>(int block_size)
 {
     return buffer;
 }
 template<>
-std::vector<int>& CommData::get_buffer<int>(const int block_size)
+std::vector<int>& CommData::get_buffer<int>(int block_size)
 {
     return int_buffer;
 }
 template<> 
-std::vector<char>& CommData::get_buffer<char>(const int block_size)
+std::vector<char>& CommData::get_buffer<char>(int block_size)
 {
     return pack_buffer;
 }

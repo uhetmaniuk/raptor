@@ -2,7 +2,10 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "krylov/cg.hpp"
 
-using namespace raptor;
+#include "core/matrix.hpp"
+#include "core/vector.hpp"
+
+namespace raptor {
 
 void CG(CSRMatrix* A, Vector& x, Vector& b, std::vector<double>& res, double tol, int max_iter)
 {
@@ -101,3 +104,6 @@ void CG(CSRMatrix* A, Vector& x, Vector& b, std::vector<double>& res, double tol
 
     return;
 }
+
+}
+

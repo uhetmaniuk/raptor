@@ -1,11 +1,11 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_ML_PARMULTILEVEL_H
-#define RAPTOR_ML_PARMULTILEVEL_H
+#pragma once
 
-#include "core/types.hpp"
+#include "core/mpi_types.hpp"
 #include "core/par_matrix.hpp"
 #include "core/par_vector.hpp"
+#include "core/types.hpp"
 #include "multilevel/par_level.hpp"
 #include "util/linalg/par_relax.hpp"
 #include "ruge_stuben/par_interpolation.hpp"
@@ -103,10 +103,9 @@ namespace raptor
                     }
                 }
 
-                for (std::vector<ParLevel*>::iterator it = levels.begin();
-                        it != levels.end(); ++it)
+                for (auto & level : levels)
                 {
-                    delete *it;
+                    delete level;
                 }
 
                 delete[] weights;
@@ -156,7 +155,7 @@ namespace raptor
                     }
                 }
 
-                if (weights == NULL)
+                if (weights == nullptr)
                 {
                     form_rand_weights(Af->local_num_rows, Af->partition->first_local_row);
                 }
@@ -185,7 +184,7 @@ namespace raptor
                 if (Af->local_num_rows) 
                 {
                     delete[] weights;
-                    weights = NULL;
+                    weights = nullptr;
                 }
 
                 // Duplicate coarsest level across all processes that hold any
@@ -279,10 +278,9 @@ namespace raptor
     
                     std::map<int, int> global_to_local;
                     int ctr = 0;
-                    for (std::vector<int>::iterator it = global_row_indices.begin();
-                            it != global_row_indices.end(); ++it)
+                    for (int & global_row_indice : global_row_indices)
                     {
-                        global_to_local[*it] = ctr++;
+                        global_to_local[global_row_indice] = ctr++;
                     }
 
                     coarse_n = Ac->global_num_rows;
@@ -574,9 +572,9 @@ namespace raptor
                 }
             }
 
-            void print_times(double* times, const char* phase)
+            void print_times(double* times, const char* phase) const
             {
-                if (times == NULL) return;
+                if (times == nullptr) return;
 
                 int rank;
                 RAPtor_MPI_Comm_rank(RAPtor_MPI_COMM_WORLD, &rank);
@@ -608,11 +606,11 @@ namespace raptor
                 }
             }
 
-            void print_setup_times()
+            void print_setup_times() const
             {
                 print_times(setup_times, "Setup");
             }
-            void print_solve_times()
+            void print_solve_times() const
             {
                 print_times(solve_times, "Solve");
             }
@@ -657,4 +655,3 @@ namespace raptor
             RAPtor_MPI_Comm coarse_comm;
     };
 }
-#endif

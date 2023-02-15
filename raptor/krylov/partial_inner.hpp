@@ -2,9 +2,10 @@
 
 #include "core/mpi_types.hpp"
 #include "core/types.hpp"
-#include "core/par_vector.hpp"
 
 namespace raptor {
+
+    class ParVector;
 
 data_t half_inner_contig(ParVector &x, ParVector &y, int half, int part_global);
 

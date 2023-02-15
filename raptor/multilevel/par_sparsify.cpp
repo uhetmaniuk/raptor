@@ -2,10 +2,13 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "multilevel/par_sparsify.hpp"
 
-using namespace raptor;
+#include "core/comm_data.hpp"
+#include "core/par_matrix.hpp"
 
-void sparsify(ParCSRMatrix* A, ParCSRMatrix* P, ParCSRMatrix* I, 
-        ParCSRMatrix* AP, ParCSRMatrix* Ac, const double theta)
+namespace raptor {
+
+void sparsify(ParCSRMatrix* A, ParCSRMatrix* P, ParCSRMatrix* I,
+        ParCSRMatrix* AP, ParCSRMatrix* Ac, double theta)
 {
     // Form Minimal Sparsity Pattern
     ParCSRMatrix* M1 = AP->mult_T(I);
@@ -183,3 +186,6 @@ void sparsify(ParCSRMatrix* A, ParCSRMatrix* P, ParCSRMatrix* I,
 
     delete M;
 }
+
+}
+

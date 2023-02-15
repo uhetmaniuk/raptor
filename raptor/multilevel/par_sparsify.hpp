@@ -1,14 +1,12 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_MULTILEVEL_SPARSIFY
-#define RAPTOR_MULTILEVEL_SPARSIFY
+#pragma once
 
-#include "core/types.hpp"
-#include "core/par_matrix.hpp"
+namespace raptor {
 
-using namespace raptor;
+    class ParCSRMatrix;
 
-void sparsify(ParCSRMatrix* A, ParCSRMatrix* P, ParCSRMatrix* I, 
-        ParCSRMatrix* AP, ParCSRMatrix* Ac, const double theta = 0.1);
+    void sparsify(ParCSRMatrix* A, ParCSRMatrix* P, ParCSRMatrix* I,
+                  ParCSRMatrix* AP, ParCSRMatrix* Ac, double theta = 0.1);
 
-#endif
+}

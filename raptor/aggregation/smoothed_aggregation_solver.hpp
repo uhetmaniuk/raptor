@@ -98,7 +98,6 @@ namespace raptor
             delete P_csc;
             delete S;
         }
-    
 
         agg_t agg_type;
         prolong_t prolong_type;

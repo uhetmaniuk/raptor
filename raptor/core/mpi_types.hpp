@@ -1,10 +1,10 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_CORE_MPI_TYPES_HPP_
-#define RAPTOR_CORE_MPI_TYPES_HPP_
+#pragma once
+
+#include <mpi.h>
 
 #include "types.hpp"
-#include <mpi.h>
 
 // Global Timing Variables
 extern bool profile;
@@ -21,33 +21,39 @@ extern void finalize_profile();
 extern void print_profile(const char* string);
 extern void average_profile(int n_iter);
 
-#define RAPtor_MPI_COMM_WORLD        MPI_COMM_WORLD
-#define RAPtor_MPI_COMM_NULL         MPI_COMM_NULL
+#define RAPtor_MPI_COMM_WORLD  MPI_COMM_WORLD
+#define RAPtor_MPI_COMM_NULL  MPI_COMM_NULL
 
-#define RAPtor_MPI_Comm              MPI_Comm
-#define RAPtor_MPI_Group             MPI_Group
-#define RAPtor_MPI_Datatype          MPI_Datatype
-#define RAPtor_MPI_Request           MPI_Request
-#define RAPtor_MPI_Status            MPI_Status
-#define RAPtor_MPI_Op                MPI_Op
+namespace raptor {
 
-#define RAPtor_MPI_INT               MPI_INT
-#define RAPtor_MPI_DOUBLE            MPI_DOUBLE
-#define RAPtor_MPI_DOUBLE_INT        MPI_DOUBLE_INT
-#define RAPtor_MPI_LONG              MPI_LONG
-#define RAPtor_MPI_PACKED            MPI_PACKED
+    using RAPtor_MPI_Comm = MPI_Comm;
+    using RAPtor_MPI_Group = MPI_Group;
+    using RAPtor_MPI_Datatype = MPI_Datatype;
 
-#define RAPtor_MPI_STATUS_IGNORE     MPI_STATUS_IGNORE
-#define RAPtor_MPI_STATUSES_IGNORE   MPI_STATUSES_IGNORE
+using RAPtor_MPI_Request = MPI_Request;
+    using RAPtor_MPI_Status = MPI_Status;
+    using RAPtor_MPI_Op = MPI_Op;
 
-#define RAPtor_MPI_SOURCE            MPI_SOURCE
-#define RAPtor_MPI_ANY_SOURCE        MPI_ANY_SOURCE
+#define RAPtor_MPI_INT  MPI_INT
+#define RAPtor_MPI_DOUBLE   MPI_DOUBLE
+#define RAPtor_MPI_DOUBLE_INT  MPI_DOUBLE_INT
+#define RAPtor_MPI_LONG  MPI_LONG
+#define RAPtor_MPI_PACKED  MPI_PACKED
 
-#define RAPtor_MPI_IN_PLACE          MPI_IN_PLACE
-#define RAPtor_MPI_SUM               MPI_SUM
-#define RAPtor_MPI_MAX               MPI_MAX
-#define RAPtor_MPI_BOR               MPI_BOR
+#define RAPtor_MPI_STATUS_IGNORE  MPI_STATUS_IGNORE
+#define RAPtor_MPI_STATUSES_IGNORE  MPI_STATUSES_IGNORE
 
+#define RAPtor_MPI_SOURCE  MPI_SOURCE
+#define RAPtor_MPI_ANY_SOURCE  MPI_ANY_SOURCE
+
+#define RAPtor_MPI_IN_PLACE  MPI_IN_PLACE
+#define RAPtor_MPI_SUM  MPI_SUM
+#define RAPtor_MPI_MAX  MPI_MAX
+#define RAPtor_MPI_BOR  MPI_BOR
+
+}
+
+using namespace raptor;
 
 // MPI Information
 extern int RAPtor_MPI_Comm_rank(RAPtor_MPI_Comm comm, int *rank);
@@ -129,5 +135,3 @@ extern int RAPtor_MPI_Group_incl(RAPtor_MPI_Group group, int n, const int ranks[
         RAPtor_MPI_Group *newgroup);
 extern int RAPtor_MPI_Group_free(RAPtor_MPI_Group* group);
 extern int RAPtor_MPI_Comm_dup(MPI_Comm comm, MPI_Comm* new_comm);
-
-#endif

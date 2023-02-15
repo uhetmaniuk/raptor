@@ -1,7 +1,6 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
-#ifndef RAPTOR_RUGE_STUBEN_SOLVER_HPP
-#define RAPTOR_RUGE_STUBEN_SOLVER_HPP
+#pragma once
 
 #include "multilevel/multilevel.hpp"
 #include "ruge_stuben/cf_splitting.hpp"
@@ -19,18 +18,15 @@ namespace raptor
         {
             coarsen_type = _coarsen_type;
             interp_type = _interp_type;
-            variables = NULL;
+            variables = nullptr;
             num_variables = 1;
         }
 
-        ~RugeStubenSolver()
-        {
+        ~RugeStubenSolver() override = default;
 
-        }
-
-        void setup(CSRMatrix *Af)
+        void setup(CSRMatrix *Af) override
         {
-            if (num_variables > 1 && variables == NULL) 
+            if (num_variables > 1 && variables == nullptr) 
             {
                 form_variable_list(Af, num_variables);
             }
@@ -38,7 +34,7 @@ namespace raptor
             setup_helper(Af);
 
             delete[] variables;
-            variables = NULL;
+            variables = nullptr;
         }
        
         void form_variable_list(const CSRMatrix* A, const int num_var)
@@ -52,12 +48,12 @@ namespace raptor
             }
         }
 
-        void extend_hierarchy()
+        void extend_hierarchy() override
         {
             int level_ctr = levels.size() - 1;
             CSRMatrix* A = levels[level_ctr]->A;
             CSRMatrix* S;
-            CSRMatrix* P = NULL;
+            CSRMatrix* P = nullptr;
             CSRMatrix* AP;
             CSCMatrix* P_csc;
             std::vector<int> states;
@@ -131,7 +127,7 @@ namespace raptor
             levels[level_ctr]->x.resize(A->n_rows);
             levels[level_ctr]->b.resize(A->n_rows);
             levels[level_ctr]->tmp.resize(A->n_rows);
-            levels[level_ctr]->P = NULL;
+            levels[level_ctr]->P = nullptr;
 
             delete AP;
             delete P_csc;
@@ -147,7 +143,3 @@ namespace raptor
 
     };
 }
-   
-
-#endif
-
