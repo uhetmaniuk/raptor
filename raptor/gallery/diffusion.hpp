@@ -1,12 +1,11 @@
 // Copyright (c) 2015-2017, RAPtor Developer Team
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 
-#ifndef DIFFUSION_HPP
-#define DIFFUSION_HPP
+#pragma once
 
 #include "core/types.hpp"
 
-using namespace raptor;
+namespace raptor {
 
 // diffusion_stencil_2d
 //
@@ -57,5 +56,4 @@ using namespace raptor;
 //
 data_t* diffusion_stencil_2d(data_t eps = 1.0, data_t theta = 0.0);
 
-
-#endif
+}

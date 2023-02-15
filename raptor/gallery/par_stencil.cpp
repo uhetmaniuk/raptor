@@ -2,6 +2,11 @@
 // License: Simplified BSD, http://opensource.org/licenses/BSD-2-Clause
 #include "par_stencil.hpp"
 
+#include "core/mpi_types.hpp"
+#include "core/par_matrix.hpp"
+
+namespace raptor {
+
 ParCSRMatrix* par_stencil_grid(data_t* stencil, int* grid, int dim)
 {
     // Get MPI Information
@@ -222,6 +227,8 @@ ParCSRMatrix* par_stencil_grid(data_t* stencil, int* grid, int dim)
     A->finalize();
 
     return A;
-} 
+}
+
+}
 
 
