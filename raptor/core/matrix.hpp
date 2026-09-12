@@ -516,11 +516,11 @@ namespace raptor
 
     COOMatrix* transpose() override;
 
-    void print();
+    void print() override;
 
-    void sort();
-    void move_diag();
-    void remove_duplicates();
+    void sort() override;
+    void move_diag() override;
+    void remove_duplicates() override;
 
     void spmv(const double* x, double* b) const;
     void spmv_append(const double* x, double* b) const;
@@ -529,7 +529,7 @@ namespace raptor
     void spmv_append_neg_T(const double* x, double* b) const;
     void spmv_residual(const double* x, const double* b, double* r) const; 
 
-    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr);
+    CSRMatrix* spgemm(CSRMatrix* B, int* B_to_C = nullptr) override;
     CSRMatrix* spgemm_T(CSCMatrix* A, int* C_map = nullptr);
 
     COOMatrix* to_COO();

@@ -322,7 +322,6 @@ CSRMatrix* symmetric_strength(CSRMatrix* A, double theta)
 
     return S;
 
-
 }
 
 CSRMatrix* CSRMatrix::strength(strength_t strength_type,
@@ -338,6 +337,6 @@ CSRMatrix* CSRMatrix::strength(strength_t strength_type,
             return symmetric_strength(this, theta);
     }
 
-    return NULL;
+    return nullptr;
 }
 

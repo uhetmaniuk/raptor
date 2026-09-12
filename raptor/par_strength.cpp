@@ -31,7 +31,7 @@ ParCSRMatrix* classical_strength(ParCSRMatrix* A, double theta, bool tap_amg, in
     ParCSRMatrix* S = new ParCSRMatrix(A->partition, A->global_num_rows, A->global_num_cols,
             A->local_num_rows, A->on_proc_num_cols, A->off_proc_num_cols);
     
-    int* off_variables = NULL;
+    int* off_variables = nullptr;
     if (num_variables > 1)
     {
         std::vector<int>& recvbuf = comm->communicate(variables);
@@ -548,9 +548,8 @@ ParCSRMatrix* ParCSRMatrix::strength(strength_t strength_type,
         case Symmetric:
             return symmetric_strength(this, theta, tap_amg);
         default : 
-            return NULL;
+            return nullptr;
     }
-
-    return NULL;
+    return nullptr;
 }
 
